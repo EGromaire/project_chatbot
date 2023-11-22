@@ -257,4 +257,4 @@ print(matrice_TF_IDF(cleaned_directory))
 #print(useless_words(tf_score(cleaned_directory)))
 
 #print((words_of_directory(cleaned_directory)))
-
+##
