@@ -248,7 +248,7 @@ presidents_names = extract_names(files_name_list)
 presidents_names = add_first_name(presidents_names)
 print_names(presidents_names)
 cleaning_files(files_name_list)
-print("j'aime beaucoup la pomme")
+
 print(tf_score(cleaned_directory))
 print(idf_score(cleaned_directory))
 
