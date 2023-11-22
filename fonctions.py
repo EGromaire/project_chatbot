@@ -240,6 +240,27 @@ def useless_words(score_tf_list):
     return useless_words_list
 
 
+def best_tfidf(tfidf_list):
+    average_matrice = []
+    top_20 = []
+    for tfidf_word in tfidf_list:
+        average = 0
+        for value in tfidf_word[1:len(tfidf_list)]:
+            average += value
+        average /= (len(tfidf_word) - 1)
+        average_matrice.append((tfidf_word[0], average))
+    # ***** Tri par sélection *****
+    for i in range(len(average_matrice)):
+        mini = i
+        for j in range(i, len(average_matrice)):
+            if average_matrice[j][1] < average_matrice[mini][1]:
+                mini = j
+        average_matrice[i], average_matrice[mini] = average_matrice[mini], average_matrice[i]
+    for i in range(1, 21):
+        top_20.append(average_matrice[-i][0])
+    return top_20
+
+
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
@@ -252,9 +273,9 @@ cleaning_files(files_name_list)
 print(tf_score(cleaned_directory))
 print(idf_score(cleaned_directory))
 
-print(matrice_TF_IDF(cleaned_directory))
+tfidf_list = matrice_TF_IDF(cleaned_directory)
+print(best_tfidf(tfidf_list))
 
 #print(useless_words(tf_score(cleaned_directory)))
 
 #print((words_of_directory(cleaned_directory)))
-##
