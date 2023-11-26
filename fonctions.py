@@ -260,6 +260,10 @@ def best_tfidf(tfidf_list):
         top_20.append(average_matrice[-i][0])
     return top_20
 
+def menu():
+    print("\n\n ********* Bonjour, bienvenue dans le menu *********")
+    print("\tSi vous souhaitez ")
+    saisie = input()
 
 # Call of the function
 directory = "./speeches"
