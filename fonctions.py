@@ -2,7 +2,7 @@ import os
 import math
 
 
-def replace_char(string:str, char:str, instead:str) -> str:
+def replace_char(string: str, char: str, instead: str) -> str:
     '''
     Fonctions replace_char renvoyant une chaine de caractère (string) dans laquelle toutes les occurences d'une chaine de caractère (char)
     a été remplacé par une autre chaine (instead)
@@ -18,12 +18,13 @@ def replace_char(string:str, char:str, instead:str) -> str:
             new_string += string[i_string]  # on ajoute le caractère à 'new_string'
             i_string += 1  # on incrémente de 1 afin de parcourir chaque caractère de 'string' un à un
         else:
-            i_char = 1 # initialisation de l'indice permettant le parcours de la chaine de caractère 'char'
+            i_char = 1  # initialisation de l'indice permettant le parcours de la chaine de caractère 'char'
 
             # boucle vérifiant si il y a une occurence de la chaine de caractère 'char' à l'indice de string 'i_string' auquel on se trouve
             while i_char + i_string < len(string) and i_char < len(char) and char[i_char] == string[i_string + i_char]:
                 i_char += 1
-            if i_char == len(char):  # si la boucle a parcouru entièrement 'char', alors il y a une occurence de char à l'indice de string auquel on se trouve
+            if i_char == len(
+                    char):  # si la boucle a parcouru entièrement 'char', alors il y a une occurence de char à l'indice de string auquel on se trouve
                 new_string += instead  # on effectue le remplacement en ajoutant 'instead' à new_string
                 i_string += len(char)  # on incrémente de la longueur de char
             else:
@@ -40,22 +41,23 @@ def list_of_files(directory, extension):
     return files_names
 
 
-def extract_name(file_name:str) -> str :
+def extract_name(file_name: str) -> str:
     '''
     Fonction permettant d'extraire le nom d'un présdent d'un nom de fichier
     :param file_name
     :return: name_extracted
     '''
     name_extracted = file_name
-    name_extracted = replace_char(name_extracted, ".txt", "")  # on retire l'extension du fichier, de la chaine de caractère
-    name_extracted = replace_char(name_extracted, "Nomination", "")  # on ne garde que la partie droite, où se trouve le nom du président
-    name_extracted = replace_char(name_extracted, "Nomination_", "")  # on ne garde que la partie droite, où se trouve le nom du président
+    name_extracted = replace_char(name_extracted, ".txt",
+                                  "")  # on retire l'extension du fichier, de la chaine de caractère
+    name_extracted = replace_char(name_extracted, "Nomination_",
+                                  "")  # on ne garde que la partie droite, où se trouve le nom du président
     if name_extracted[-1].isnumeric():
         name_extracted = name_extracted[:-1]
     return name_extracted
 
 
-def extracted_names_list(files:list) -> list:
+def extracted_names_list(files: list) -> list:
     '''
     Fonction permettant d'extraire les noms des présidents
     à partir des fichiers des discours des présidents, stockés dans une liste.
@@ -72,13 +74,14 @@ def extracted_names_list(files:list) -> list:
 
 
 def add_first_name(names):
-    dict_names = {"Chirac":"Jacque", "Sarkozy":"Nicolas", "Hollande":"François", "Macron":"Emmanuel", "Mitterrand":"François", "Giscard dEstaing":"Valérie"}
+    dict_names = {"Chirac": "Jacque", "Sarkozy": "Nicolas", "Hollande": "François", "Macron": "Emmanuel",
+                  "Mitterrand": "François", "Giscard dEstaing": "Valérie"}
     for i in range(len(names)):
         names[i] = dict_names[names[i]] + " " + names[i]
     return names
 
 
-def print_names(names:list) -> None:
+def print_names(names: list) -> None:
     '''
     FONCTION print_names
     :param names: list
@@ -87,11 +90,11 @@ def print_names(names:list) -> None:
     '''
     display = "Voici les noms des présidents :"
     for name in names:
-        display += f"\n\t\t-{name}" # ajoute à display les noms des présidents contenus dans la liste (names)
+        display += f"\n\t\t-{name}"  # ajoute à display les noms des présidents contenus dans la liste (names)
     print(display)
 
 
-def cleaning_files(files_name_list:list) -> None:
+def cleaning_files(files_name_list: list) -> None:
     '''
     FONCTION cleaning_files
     :param files_name_list: list
@@ -103,11 +106,11 @@ def cleaning_files(files_name_list:list) -> None:
     '''
     if not os.path.exists("cleaned"):
         os.mkdir("cleaned")
-    for name in files_name_list: # parcourir la liste des noms des fichiers, pour les ouvrir
-        file = open("speeches/"+name, "r", encoding="UTF8")
+    for name in files_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
+        file = open("speeches/" + name, "r", encoding="UTF8")
         speech = file.readlines()
         cleaned_speech = ""
-        for line in speech: # parcourir les lignes de chaque fichiers
+        for line in speech:  # parcourir les lignes de chaque fichiers
             for letter in line:  # parcourir les caractères de chaque lignes
                 # Si le caractère est une lettre majuscule, on la convertie en minuscule
                 if 65 <= ord(letter) <= 90:
@@ -116,7 +119,7 @@ def cleaning_files(files_name_list:list) -> None:
                 elif letter == "'" or letter == "-" or letter == " ":
                     cleaned_speech += " "
                 # Si le caractère est une lettre miniscule, on le laisse tel quel
-                elif 97 <= ord(letter) <=  122:
+                elif 97 <= ord(letter) <= 122:
                     cleaned_speech += letter
                 # remplace les accents
                 elif letter in "éèêëçàâùôïî":
@@ -134,7 +137,7 @@ def cleaning_files(files_name_list:list) -> None:
         new_file.close()
 
 
-def occurence(string:str, directory:str) -> dict:
+def occurence(string: str, directory: str) -> dict:
     '''
     FONCTION occurence
     :param string: str
@@ -145,18 +148,20 @@ def occurence(string:str, directory:str) -> dict:
     de chaque mots de la chaines de caractères
     '''
     return_dict = {}  # initialisations du dictionnaire
-    list_of_words = string.split(" ") # on met tout les mots dans une liste
-    set_of_words = words_of_directory(directory)[0]  # set contenant tout les mots présent dans les fichiers .txt, du répertoire 'directory'
+    list_of_words = string.split(" ")  # on met tout les mots dans une liste
+    set_of_words = words_of_directory(directory)[
+        0]  # set contenant tout les mots présent dans les fichiers .txt, du répertoire 'directory'
     for word in set_of_words:  # on parcourt le set
         occurence_count = 0
         for paragraph_word in list_of_words:  # on parcourt le string principal
             if word == paragraph_word:
                 occurence_count += 1
-        return_dict[word] = occurence_count  # on ajoute au dictionnaire le mot en clef et son nombre d'occurence en valeur
+        return_dict[
+            word] = occurence_count  # on ajoute au dictionnaire le mot en clef et son nombre d'occurence en valeur
     return return_dict
 
 
-def words_of_directory(directory:str) -> (list, set):
+def words_of_directory(directory: str) -> (list, set):
     '''
     FONCTION list_words
     :param directory: str
@@ -168,10 +173,10 @@ def words_of_directory(directory:str) -> (list, set):
     '''
     l_files = list_of_files(directory, "txt")
     set_words = []
-    l_words=[]
+    l_words = []
     for name in l_files:
         list_of_words_in_file = []
-        file = open(directory+"/"+name, 'r', encoding='UTF8')
+        file = open(directory + "/" + name, 'r', encoding='UTF8')
         speech = file.readline()
         words = speech.split(" ")
         for word in words:
@@ -182,13 +187,13 @@ def words_of_directory(directory:str) -> (list, set):
     return set(set_words), l_words
 
 
-def tf_score(directory:str) -> dict:
+def tf_score(directory: str) -> dict:
     '''Fonctions prenant en paramètre une chaines de caractères,
     renvoyant un dictionnaire contenant le nombre d'occurence de chaque mots dans les différents discours des présidents'''
-    scores = {} # initialisation d'un dictionnaire dans laquelle on ajoute le score_tf de chaque mot, en fonction du fichier text
-    list_dicts = [] # initialisation d'une liste dans laquelle on ajoute les dictionaires ayant en clef le mot, et son nombre d'occurence en valeure
+    scores = {}  # initialisation d'un dictionnaire dans laquelle on ajoute le score_tf de chaque mot, en fonction du fichier text
+    list_dicts = []  # initialisation d'une liste dans laquelle on ajoute les dictionaires ayant en clef le mot, et son nombre d'occurence en valeure
     list_of_words = words_of_directory(directory)[1]
-    for speech in list_of_words: # on parcourt la liste des mots des discours des présidents
+    for speech in list_of_words:  # on parcourt la liste des mots des discours des présidents
         speech_string = ""
         for word in speech:
             speech_string += word + " "
@@ -207,8 +212,9 @@ def tf_score(directory:str) -> dict:
 
 def idf_score(directory):
     return_dict = {}  # initialisations du dictionnaire
-    set_of_words = words_of_directory(directory)[0] # set dans lequel se trouve tout les mots sans doublons
-    list_of_speeches_string = words_of_directory(directory)[1]  # liste à deux dimensions contenant tout les mots, de chaque speech
+    set_of_words = words_of_directory(directory)[0]  # set dans lequel se trouve tout les mots sans doublons
+    list_of_speeches_string = words_of_directory(directory)[
+        1]  # liste à deux dimensions contenant tout les mots, de chaque speech
 
     for word in set_of_words:  # on parcourt tout les mots du set
         idf = 0
@@ -218,12 +224,12 @@ def idf_score(directory):
                 is_in_speech = True
             if is_in_speech:
                 idf += 1
-        idf = math.log(idf/len(list_of_speeches_string) + 1)  # calcule du score_IDF
+        idf = math.log(idf / len(list_of_speeches_string) + 1)  # calcule du score_IDF
         return_dict[word] = idf
     return return_dict
 
 
-def matrice_TF_IDF(directory:str) -> list:
+def matrice_TF_IDF(directory: str) -> list:
     '''
     :param directory: chaine de caractère contenant un chemin d'accès à un répertoire
     :return tf_idf: liste 2D, composé de listes contenant un mot des discours et ses scores tf-idf pour chaque discours dans l'ordre alphabétique
@@ -231,26 +237,30 @@ def matrice_TF_IDF(directory:str) -> list:
     tf_idf_score = []
     idf = idf_score(directory)
     tf = tf_score(directory)
-    set_of_words = words_of_directory(directory)[0] # set contenant tout les mots des discowurs des présidents
-    for word in set_of_words: # on parcourt le set
+    set_of_words = words_of_directory(directory)[0]  # set contenant tout les mots des discowurs des présidents
+    for word in set_of_words:  # on parcourt le set
         tf_idf_word = [word]
         for speech_tf_score in tf[word]:
-            tf_idf_word.append(speech_tf_score * idf[word]) # calcule du score tf-idf du mot, et ajout dans la matrice
+            tf_idf_word.append(speech_tf_score * idf[word])  # calcule du score tf-idf du mot, et ajout dans la matrice
         tf_idf_score.append(tf_idf_word)
     return tf_idf_score
 
 
-def useless_words(score_tf_list):
+def useless_word(list_of_tfidf_scores: list) -> bool:
+    i = 1
+    while i < len(list_of_tfidf_scores) and list_of_tfidf_scores[i] <= 0.2:
+        i += 1
+    if i == len(list_of_tfidf_scores):
+        return True
+    return False
 
-    useless_words_list = []
-    for word in score_tf_list:
-        useless = False
-        for i in range(1,8):
-            if word[i] == 0:
-                useless = True
-        if useless:
-            useless_words_list.append(word[0])
-    return useless_words_list
+
+def useless_word_list(tfidf_list: list) -> list:
+    list_of_useless_words = []
+    for word_scores in tfidf_list:
+        if useless_word(word_scores):
+            list_of_useless_words.append(word_scores[0])
+    return list_of_useless_words
 
 
 def best_tfidf(tfidf_list):
@@ -274,7 +284,7 @@ def best_tfidf(tfidf_list):
     return top_20
 
 
-def word_used(word:str, file_name_list:list, tf_score:dict)-> list:
+def word_used(word: str, file_name_list: list, tf_score: dict) -> list:
     '''
     Fonction renvoyant le nom de présdents ayant utilisé le mot 'word'
     :param word: mot que l'on recherche
@@ -282,7 +292,7 @@ def word_used(word:str, file_name_list:list, tf_score:dict)-> list:
     :param tf_score: dictionnaire contenant tous les mots avec leurs scores tf
     :return: liste des présidents ayant utilisé le mot
     '''
-    occurence_of_word =  tf_score[word]
+    occurence_of_word = tf_score[word]
     presidents_use_word = []
     for i in range(len(occurence_of_word)):
         if occurence_of_word[i] >= 1:
@@ -290,7 +300,7 @@ def word_used(word:str, file_name_list:list, tf_score:dict)-> list:
     return presidents_use_word
 
 
-def word_most_used(word:str, file_name_list:list, tf_score:dict)-> str:
+def word_most_used(word: str, file_name_list: list, tf_score: dict) -> str:
     '''
     Fonction renvoyant le nom de présdents ayant utilisé le mot 'word'
     :param word: mot que l'on recherche
@@ -310,7 +320,7 @@ def word_most_used(word:str, file_name_list:list, tf_score:dict)-> str:
     return president_max
 
 
-def list_of_most_used_words_by_president(president_name:str, file_name_list:list, tf_score:dict) -> list:
+def list_of_most_used_words_by_president(president_name: str, file_name_list: list, tf_score: dict) -> list:
     files_to_search = []
     list_of_most_used_words = ['' for i in range(10)]
     for i in range((len(file_name_list))):
@@ -327,30 +337,43 @@ def list_of_most_used_words_by_president(president_name:str, file_name_list:list
                 max = score
     return list_of_most_used_words
 
+
+def words_used_by_all_presidents(tf_score: dict, list_of_useless_words: list) -> list:
+    list_of_words_used_by_all_presidents = []
+    for word in tf_score.keys():
+        i = 0
+        while i < len(tf_score[word]) and tf_score[word][i] != 0:
+            i += 1
+        if i == len(tf_score[word]) and word not in list_of_useless_words:
+            list_of_words_used_by_all_presidents.append(word)
+    return list_of_words_used_by_all_presidents
+
+
+
+
+
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
 files_name_list = list_of_files(directory, "txt")
 presidents_names = extracted_names_list(files_name_list)
-print(presidents_names)
 presidents_names = add_first_name(presidents_names)
-tf_score_dict = tf_score(cleaned_directory)
-idf_score_dict = idf_score(cleaned_directory)
 print_names(presidents_names)
 cleaning_files(files_name_list)
 
+tf_score_dict = tf_score(cleaned_directory)
+idf_score_dict = idf_score(cleaned_directory)
+tfidf_list = matrice_TF_IDF(cleaned_directory)
+list_of_useless_words = useless_word_list(tfidf_list)
+list_of_words_used_by_all_presidents = words_used_by_all_presidents(tf_score_dict, list_of_useless_words)
+
+print(presidents_names)
 print(tf_score_dict)
 print(idf_score_dict)
-
-tfidf_list = matrice_TF_IDF(cleaned_directory)
-print(best_tfidf(tfidf_list))
+print(list_of_useless_words, '\n', len(list_of_useless_words))
+print(list_of_words_used_by_all_presidents)
 
 print_names(extracted_names_list(word_used('nation', files_name_list, tf_score_dict)))
 print(word_most_used('nation', files_name_list, tf_score_dict))
 
-#print(useless_words(tf_score(cleaned_directory)))
-
-#print((words_of_directory(cleaned_directory)))
-
-
-
+print()
