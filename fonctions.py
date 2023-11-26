@@ -1,5 +1,6 @@
 import os
 import math
+import time
 
 
 def replace_char(string:str, char:str, instead:str) -> str:
@@ -309,10 +310,6 @@ def word_most_used(word:str, file_name_list:list, tf_score:dict)-> str:
     return president_max
 
 
-def menu():
-    print("\n\n ********* Bonjour, bienvenue dans le menu *********")
-    print("\tSi vous souhaitez ")
-    saisie = input()
 
 # Call of the function
 directory = "./speeches"
@@ -337,3 +334,31 @@ print(word_most_used('nation', files_name_list, tf_score_dict))
 #print(useless_words(tf_score(cleaned_directory)))
 
 #print((words_of_directory(cleaned_directory)))
+
+
+# ************* MENU **************
+in_menu = True
+# boucle tant que l'on a pas fermé le menu
+while in_menu:
+    print("\n\n ********* Bonjour, bienvenue dans le menu *********")
+    print("\t-Si vous souhaitez fermer le menu entrez 1")
+    print("\t-Si vous souhaitez connaitre le nom du premier président à avoir parlé d'écologie, entrez 2")
+    print("\t-Si vous souhaitez connaitre le mot le plus répété par un certain président, entrez 3")
+    print("\t-Si vous souhaitez connaître le nom du président à avoir le plus répété un certain mot, entrez 4")
+    print("\t-Si vous souhaitez le nom du premier président à avoir parlé d'écologie, entrez 5")
+    user_input = input("\nSaisissez le numéro de l'action que vous souhaitez exécuter : ")
+    time.sleep(2)
+    if user_input == '1':
+        in_menu = False  # fin de la boucle, fin du menu
+    elif user_input == '2':
+    elif user_input == '3':
+    elif user_input == '4':
+    elif user_input == '5':
+    else:
+        print("\t\t*** ERREUR DE SAISIE ***")
+        print("La valeur que vous avez saisie n'est pas valide !")
+        time.sleep(4)
+        print("\nRetour au menu principale.")
+        time.sleep(2)
+
+
