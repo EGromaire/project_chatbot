@@ -48,6 +48,7 @@ def extract_name(file_name:str) -> str :
     '''
     name_extracted = file_name
     name_extracted = replace_char(name_extracted, ".txt", "")  # on retire l'extension du fichier, de la chaine de caractère
+    name_extracted = replace_char(name_extracted, "Nomination", "")  # on ne garde que la partie droite, où se trouve le nom du président
     name_extracted = replace_char(name_extracted, "Nomination_", "")  # on ne garde que la partie droite, où se trouve le nom du président
     if name_extracted[-1].isnumeric():
         name_extracted = name_extracted[:-1]
@@ -68,7 +69,6 @@ def extracted_names_list(files:list) -> list:
         if not extract_name(name) in names_list:
             names_list.append(extract_name(name))
     return names_list
-
 
 
 def add_first_name(names):
@@ -327,13 +327,12 @@ def list_of_most_used_words_by_president(president_name:str, file_name_list:list
                 max = score
     return list_of_most_used_words
 
-
-
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
 files_name_list = list_of_files(directory, "txt")
 presidents_names = extracted_names_list(files_name_list)
+print(presidents_names)
 presidents_names = add_first_name(presidents_names)
 tf_score_dict = tf_score(cleaned_directory)
 idf_score_dict = idf_score(cleaned_directory)
@@ -348,5 +347,10 @@ print(best_tfidf(tfidf_list))
 
 print_names(extracted_names_list(word_used('nation', files_name_list, tf_score_dict)))
 print(word_most_used('nation', files_name_list, tf_score_dict))
-print(list_of_most_used_words_by_president('Chirac', files_name_list, tf_score_dict))
+
+#print(useless_words(tf_score(cleaned_directory)))
+
+#print((words_of_directory(cleaned_directory)))
+
+
 
