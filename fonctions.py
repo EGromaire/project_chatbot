@@ -49,7 +49,7 @@ def extract_name(file_name:str) -> str :
     '''
     name_extracted = file_name
     name_extracted = replace_char(name_extracted, ".txt", "")  # on retire l'extension du fichier, de la chaine de caractère
-    name_extracted = replace_char(name_extracted, "Nomination", "")  # on ne garde que la partie droite, où se trouve le nom du président
+    name_extracted = replace_char(name_extracted, "Nomination_", "")  # on ne garde que la partie droite, où se trouve le nom du président
     if name_extracted[-1].isnumeric():
         name_extracted = name_extracted[:-1]
     return name_extracted
@@ -310,12 +310,29 @@ def word_most_used(word:str, file_name_list:list, tf_score:dict)-> str:
     return president_max
 
 
+def list_of_most_used_words_by_president(president_name:str, file_name_list:list, tf_score:dict) -> list:
+    files_to_search = []
+    list_of_most_used_words = ['' for i in range(10)]
+    for i in range((len(file_name_list))):
+        if extract_name(file_name_list[i]) == president_name:
+            files_to_search.append(i)
+    for j in range(10):
+        max = 0
+        for word in tf_score.keys():
+            score = 0
+            for i in range(len(files_to_search)):
+                score += tf_score[word][i]
+            if not word in list_of_most_used_words and score > max:
+                list_of_most_used_words[j] = word
+                max = score
+    return list_of_most_used_words
 
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
 files_name_list = list_of_files(directory, "txt")
 presidents_names = extracted_names_list(files_name_list)
+print(presidents_names)
 presidents_names = add_first_name(presidents_names)
 tf_score_dict = tf_score(cleaned_directory)
 idf_score_dict = idf_score(cleaned_directory)
@@ -351,9 +368,15 @@ while in_menu:
     if user_input == '1':
         in_menu = False  # fin de la boucle, fin du menu
     elif user_input == '2':
+        pass
     elif user_input == '3':
+        word = input("\nSaisissez le mot dont il est question : ")
+        resultat = word_most_used(word, files_name_list, tf_score_dict)
+        print(f"\n\n-----Le président {resultat}, est le président ayant le plus répété le mot ~{word}~ lors de son discour d'inverstiture-----")
     elif user_input == '4':
+        pass
     elif user_input == '5':
+        pass
     else:
         print("\t\t*** ERREUR DE SAISIE ***")
         print("La valeur que vous avez saisie n'est pas valide !")
