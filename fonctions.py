@@ -40,22 +40,35 @@ def list_of_files(directory, extension):
     return files_names
 
 
-def extract_names(files:list) -> list :
-    '''Fonction permettant d'extraire les noms des présidents
-    à partir des fichiers des discours des présidents, stockés dans une liste.
-    Return : liste des noms des présidents'''
+def extract_name(file_name:str) -> str :
+    '''
+    Fonction permettant d'extraire le nom d'un discours à partir de
+    :param files:
+    :return:
+    '''
+    name_extracted = file_name
+    name_extracted = replace_char(name_extracted, ".txt", "")  # on retire l'extension du fichier, de la chaine de caractère
+    name_extracted = replace_char(name_extracted, "Nomination_", "")  # on ne garde que la partie droite, où se trouve le nom du président
+    if name_extracted[-1].isnumeric():
+        name_extracted = name_extracted[:-1]
+    return name_extracted
 
+
+def extracted_names_list(files:list) -> list:
+    '''
+    Fonction permettant d'extraire les noms des présidents
+    à partir des fichiers des discours des présidents, stockés dans une liste.
+    Return : liste des noms des présidents
+    :param files:
+    :return:
+    '''
     names_list = []
 
     for name in files:
-        name = replace_char(name, ".txt", "")  # on retire l'extension du fichier, de la chaine de caractère
-        name = replace_char(name, "Nomination_", "")  # on ne garde que la partie droite, où se trouve le nom du président
-        if name[-1].isnumeric():
-            name = name[:-1]
-        if not name in names_list:
-            names_list.append(name)
-
+        if not extract_name(name) in names_list:
+            names_list.append(extract_name(name))
     return names_list
+
 
 
 def add_first_name(names):
@@ -261,21 +274,61 @@ def best_tfidf(tfidf_list):
     return top_20
 
 
+def word_used(word:str, file_name_list:list, tf_score:dict)-> list:
+    '''
+    Fonction renvoyant le nom de présdents ayant utilisé le mot 'word'
+    :param word: mot que l'on recherche
+    :param file_name_list: liste des noms des fichiers
+    :param tf_score: dictionnaire contenant tous les mots avec leurs scores tf
+    :return: liste des présidents ayant utilisé le mot
+    '''
+    occurence_of_word =  tf_score[word]
+    presidents_use_word = []
+    for i in range(len(occurence_of_word)):
+        if occurence_of_word[i] >= 1:
+            presidents_use_word.append(file_name_list[i])
+    return presidents_use_word
+
+
+def word_most_used(word:str, file_name_list:list, tf_score:dict)-> str:
+    '''
+    Fonction renvoyant le nom de présdents ayant utilisé le mot 'word'
+    :param word: mot que l'on recherche
+    :param file_name_list: liste des noms des fichiers
+    :param tf_score: dictionnaire contenant tous les mots avec leurs scores tf
+    :return: nom du président ayant utilisé le mot
+    '''
+    occurence_of_word = tf_score[word]
+    max = occurence_of_word[0]
+    president_max = ''
+    for i in range(len(occurence_of_word)):
+        if president_max == extract_name(file_name_list[i]):
+            max += occurence_of_word[i]
+        if occurence_of_word[i] > max:
+            max = occurence_of_word[i]
+            president_max = extract_name(file_name_list[i])
+    return president_max
+
+
+
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
 files_name_list = list_of_files(directory, "txt")
-presidents_names = extract_names(files_name_list)
+presidents_names = extracted_names_list(files_name_list)
 presidents_names = add_first_name(presidents_names)
+tf_score_dict = tf_score(cleaned_directory)
+idf_score_dict = idf_score(cleaned_directory)
 print_names(presidents_names)
 cleaning_files(files_name_list)
 
-print(tf_score(cleaned_directory))
-print(idf_score(cleaned_directory))
+print(tf_score_dict)
+print(idf_score_dict)
 
 tfidf_list = matrice_TF_IDF(cleaned_directory)
 print(best_tfidf(tfidf_list))
 
-#print(useless_words(tf_score(cleaned_directory)))
+print_names(extracted_names_list(word_used('nation', files_name_list, tf_score_dict)))
+print(word_most_used('nation', files_name_list, tf_score_dict))
 
-#print((words_of_directory(cleaned_directory)))
+
