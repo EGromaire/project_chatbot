@@ -1,6 +1,5 @@
 import os
 import math
-import time
 
 
 def replace_char(string:str, char:str, instead:str) -> str:
@@ -69,6 +68,7 @@ def extracted_names_list(files:list) -> list:
         if not extract_name(name) in names_list:
             names_list.append(extract_name(name))
     return names_list
+
 
 
 def add_first_name(names):
@@ -327,12 +327,13 @@ def list_of_most_used_words_by_president(president_name:str, file_name_list:list
                 max = score
     return list_of_most_used_words
 
+
+
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
 files_name_list = list_of_files(directory, "txt")
 presidents_names = extracted_names_list(files_name_list)
-print(presidents_names)
 presidents_names = add_first_name(presidents_names)
 tf_score_dict = tf_score(cleaned_directory)
 idf_score_dict = idf_score(cleaned_directory)
@@ -347,41 +348,5 @@ print(best_tfidf(tfidf_list))
 
 print_names(extracted_names_list(word_used('nation', files_name_list, tf_score_dict)))
 print(word_most_used('nation', files_name_list, tf_score_dict))
-
-#print(useless_words(tf_score(cleaned_directory)))
-
-#print((words_of_directory(cleaned_directory)))
-
-
-# ************* MENU **************
-in_menu = True
-# boucle tant que l'on a pas fermé le menu
-while in_menu:
-    print("\n\n ********* Bonjour, bienvenue dans le menu *********")
-    print("\t-Si vous souhaitez fermer le menu entrez 1")
-    print("\t-Si vous souhaitez connaitre le nom du premier président à avoir parlé d'écologie, entrez 2")
-    print("\t-Si vous souhaitez connaitre le mot le plus répété par un certain président, entrez 3")
-    print("\t-Si vous souhaitez connaître le nom du président à avoir le plus répété un certain mot, entrez 4")
-    print("\t-Si vous souhaitez le nom du premier président à avoir parlé d'écologie, entrez 5")
-    user_input = input("\nSaisissez le numéro de l'action que vous souhaitez exécuter : ")
-    time.sleep(2)
-    if user_input == '1':
-        in_menu = False  # fin de la boucle, fin du menu
-    elif user_input == '2':
-        pass
-    elif user_input == '3':
-        word = input("\nSaisissez le mot dont il est question : ")
-        resultat = word_most_used(word, files_name_list, tf_score_dict)
-        print(f"\n\n-----Le président {resultat}, est le président ayant le plus répété le mot ~{word}~ lors de son discour d'inverstiture-----")
-    elif user_input == '4':
-        pass
-    elif user_input == '5':
-        pass
-    else:
-        print("\t\t*** ERREUR DE SAISIE ***")
-        print("La valeur que vous avez saisie n'est pas valide !")
-        time.sleep(4)
-        print("\nRetour au menu principale.")
-        time.sleep(2)
-
+print(list_of_most_used_words_by_president('Chirac', files_name_list, tf_score_dict))
 
