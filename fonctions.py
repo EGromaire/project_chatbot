@@ -4,6 +4,24 @@ import random
 import time
 
 
+def split_char(string: str, char: str) -> list:
+    """
+    FONCTION split_char
+    :param string: chaine de caractère
+    :param char: séparateurs
+    :return: listes de chaines de caractères correspondants à la chaine de caractère (string) divisé par un séparateur (char)
+    """
+    word = ''
+    words_list = []
+    for letter in string:
+        if letter == char or letter == '\n':
+            words_list.append(word)
+            word = ''
+        else:
+            word += letter
+    return words_list
+
+
 def replace_char(string: str, char: str, instead: str) -> str:
     """
     FONCTION replace_char
@@ -154,7 +172,7 @@ def occurrence(string: str, directory: str) -> dict:
     d'occurrences de chaque mot de la chaine de caractères
     """
     return_dict = {}  # initialisations du dictionnaire
-    list_of_words = string.split(" ")  # on met tous les mots dans une liste
+    list_of_words = split_char(string," ")  # on met tous les mots dans une liste
     set_of_words = words_of_directory(directory)[
         0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
     for word in set_of_words:  # on parcourt le set
@@ -183,7 +201,7 @@ def words_of_directory(directory: str) -> (list, set):
         list_of_words_in_file = []
         file = open(directory + "/" + name, 'r', encoding='UTF8')
         speech = file.readline()
-        words = speech.split(" ")
+        words = split_char(speech," ")
         for word in words:
             if word != '':
                 list_of_words_in_file.append(word)
@@ -419,6 +437,11 @@ def green_president(files_names:list, tf_score:dict)->str:
         if name in president_ecologie or name in president_climat:
                 return name
 
+
+def sentence_words(sentence):
+
+    for letter in sentence:
+        if letter
 
 # Call of the function
 directory = "./speeches"
