@@ -438,10 +438,14 @@ def green_president(files_names:list, tf_score:dict)->str:
                 return name
 
 
-def sentence_words(sentence):
+def common_words(set_one:set, set_two:set) -> set:
+    """
+    :param set_one: un set
+    :param set_two: un set
+    :return: set contenant l'intersection des deux sets
+    """
+    return set_one|set_two
 
-    for letter in sentence:
-        if letter
 
 # Call of the function
 directory = "./speeches"
