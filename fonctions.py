@@ -4,6 +4,18 @@ import random
 import time
 
 
+def tri_selection(liste:list):
+    for i in range(len(liste)):
+        # Trouver le minimum de la sous-liste
+        min = i
+        for j in range(i + 1, len(liste)):
+            if liste[min] > liste[j]:
+                min = j
+        # mettre le minimum en première position
+        liste[i], liste[min] = liste[min], liste[i]
+    return liste
+
+
 def split_char(string: str, char: str) -> list:
     """
     FONCTION split_char
@@ -173,8 +185,7 @@ def occurrence(string: str, directory: str) -> dict:
     """
     return_dict = {}  # initialisations du dictionnaire
     list_of_words = split_char(string," ")  # on met tous les mots dans une liste
-    set_of_words = words_of_directory(directory)[
-        0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
+    set_of_words = words_of_directory(directory)[0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
     for word in set_of_words:  # on parcourt le set
         occurence_count = 0
         for paragraph_word in list_of_words:  # on parcourt le string principal
@@ -185,7 +196,7 @@ def occurrence(string: str, directory: str) -> dict:
     return return_dict
 
 
-def words_of_directory(directory: str) -> (list, set):
+def words_of_directory(directory: str) -> (list, list):
     """
     FONCTION list_words
     :param directory: str
@@ -195,7 +206,7 @@ def words_of_directory(directory: str) -> (list, set):
     texte (.txt) de ce répertoire
     """
     l_files = list_of_files(directory, "txt")
-    set_words = []
+    all_words = []
     l_words = []
     for name in l_files:
         list_of_words_in_file = []
@@ -205,9 +216,9 @@ def words_of_directory(directory: str) -> (list, set):
         for word in words:
             if word != '':
                 list_of_words_in_file.append(word)
-                set_words.append(word)
+                all_words.append(word)
         l_words.append(list_of_words_in_file)
-    return set(set_words), l_words
+    return tri_selection(list(set(all_words))), l_words
 
 
 def tf_score(directory: str) -> dict:
@@ -248,11 +259,11 @@ def idf_score(directory: str) -> dict:
     fonction qui assigne à chaque mot son score IDF dans un dictionnaire
     """
     return_dict = {}  # initialisations du dictionnaire
-    set_of_words = words_of_directory(directory)[0]  # set dans lequel se trouve tous les mots sans doublons
+    all_words = words_of_directory(directory)[0]  # set dans lequel se trouve tous les mots sans doublons
     list_of_speeches_string = words_of_directory(directory)[
         1]  # liste à deux dimensions contenant tous les mots, de chaque speech
 
-    for word in set_of_words:  # on parcourt tous les mots du set
+    for word in all_words:  # on parcourt tous les mots du set
         idf = 0
         for speech in list_of_speeches_string:
             is_in_speech = False
@@ -275,8 +286,8 @@ def matrice_TF_IDF(directory: str) -> list:
     tf_idf_score = []
     idf = idf_score(directory)
     tf = tf_score(directory)
-    set_of_words = words_of_directory(directory)[0]  # set contenant tous les mots des discours des présidents
-    for word in set_of_words:  # on parcourt le set
+    all_words = words_of_directory(directory)[0]  # list contenant tous les mots du corpus
+    for word in all_words:  # on parcourt la liste
         tf_idf_word = [word]
         for speech_tf_score in tf[word]:
             tf_idf_word.append(speech_tf_score * idf[word])  # calcule du score TF-IDF du mot, et ajout dans la matrice
@@ -445,6 +456,20 @@ def common_words(set_one:set, set_two:set) -> set:
     :return: set contenant l'intersection des deux sets
     """
     return set_one|set_two
+
+
+def tf_list(sentence_words:list, all_words:list, length:int)->list:
+    return_list = []
+    for i in range(len(all_words)):
+        return_list.append(word[i])
+        score = 0
+        if all_words[i] in sentence_words:
+            for sentence_w in sentence_words:
+                if sentence_w == all_words[i]:
+                    score += 1
+        for j in range(length):
+            return_list.append(score)
+    return return_list
 
 
 # Call of the function
