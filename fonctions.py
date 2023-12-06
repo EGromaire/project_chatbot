@@ -458,7 +458,7 @@ def common_words(set_one:set, set_two:set) -> set:
     return set_one|set_two
 
 
-def tf_list(sentence_words:list, all_words:list, length:int)->list:
+def tf_list(sentence_words:list, all_words:list, idf_score:list)->list:
     return_list = []
     for i in range(len(all_words)):
         return_list.append(word[i])
@@ -467,7 +467,7 @@ def tf_list(sentence_words:list, all_words:list, length:int)->list:
             for sentence_w in sentence_words:
                 if sentence_w == all_words[i]:
                     score += 1
-        for j in range(length):
+        for j in range(len(idf_score[0])):
             return_list.append(score)
     return return_list
 
