@@ -118,20 +118,6 @@ def print_names(names: list) -> None:
         display += f"\n\t\t-{name}"  # ajoute à display les noms des présidents contenus dans la liste (names)
     print(display)
 
-def cleaning_files(file_name_list: list):
-    if not os.path.exists("cleaned"):
-        os.mkdir("cleaned")
-    for name in file_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
-        file = open("speeches/" + name, "r", encoding="UTF8")
-        speech_list = file.readlines()
-        file.close()
-        speech = ''
-        for line in speech_list:
-            speech += line
-        file = open("cleaned/" + "cleaned_" + name, "w", encoding="UTF8")
-        file.write(cleaning_string(speech))
-
-
 
 def cleaning_string(string: str) -> str:
     cleaned_string = ''
@@ -167,6 +153,24 @@ def cleaning_string(string: str) -> str:
         i += 1
     cleaned_string = replace_char(cleaned_string, "  ", " ")
     return cleaned_string
+
+
+def cleaning_files(file_name_list: list):
+    if not os.path.exists("cleaned"):
+        os.mkdir("cleaned")
+    for name in file_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
+        file = open("speeches/" + name, "r", encoding="UTF8")
+        speech_list = file.readlines()
+        file.close()
+        speech = ''
+        for line in speech_list:
+            speech += line
+        file = open("cleaned/" + "cleaned_" + name, "w", encoding="UTF8")
+        file.write(cleaning_string(speech))
+
+
+def question_to_list(question: str) -> list:
+    return split_char(cleaning_string(question))
 
 
 def occurrence(string: str, directory: str) -> dict:
