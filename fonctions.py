@@ -174,19 +174,18 @@ def cleaning_files(files_name_list: list) -> None:
         new_file.close()
 
 
-def occurrence(string: str, directory: str) -> dict:
+def occurrence(list_of_words: list, directory: str) -> dict:
     """
     FONCTION occurrence
     :param directory:
-    :param string: str
+    :param list_of_words: list contenant un ensemble de mots
     :return: dict
     Fonctions prenant en paramètre une chaine de caractères, renvoyant un dictionnaire contenant le nombre
     d'occurrences de chaque mot de la chaine de caractères
     """
     return_dict = {}  # initialisations du dictionnaire
-    list_of_words = split_char(string," ")  # on met tous les mots dans une liste
     set_of_words = words_of_directory(directory)[0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
-    for word in set_of_words:  # on parcourt le set
+    for word in set_of_words:  # on parcourt la liste
         occurence_count = 0
         for paragraph_word in list_of_words:  # on parcourt le string principal
             if word == paragraph_word:
@@ -235,13 +234,11 @@ def tf_score(directory: str) -> dict:
     list_dicts = []
     list_of_words = words_of_directory(directory)[1]
     for speech in list_of_words:  # on parcourt la liste des mots des discours des présidents
-        speech_string = ""
-        for word in speech:
-            speech_string += word + " "
-        list_dicts.append(occurrence(speech_string, directory))
+        list_dicts.append(occurrence(speech, directory))
     for key in list_dicts[0]:
         word_score = []  # initialisation de la liste contenant les scores du mot en fonction du fichier text
-        for dico in list_dicts:
+        # on fait fusionner tout les dictionnaires afin d'en avoir un seul contenant les score tf de chaque mots en fonction du discours
+        for dico in list_dicts: # on parcours chaque dictionnaires
             speech_score = 0
             for items in dico.items():
                 if items[0] == key:
@@ -470,6 +467,22 @@ def tf_list(sentence_words:list, all_words:list, idf_score:list)->list:
         for j in range(len(idf_score[0])):
             return_list.append(score)
     return return_list
+
+
+def sentence_tf_idf(tf_sentence:list, all_words:list, idf_dict:dict):
+    """
+    :param tf_sentence: liste de tout les mots de la question de l'utilisateur
+    :param all_words: liste de tout les mots du corpus
+    :param idf_list: dictionnaire des scores idf de tout les mots du corpus
+    :return: list : matrice tf_idf de la question de l'utilisateur
+    """
+    tf_idf = [] # initialisation de la matrice tf_idf
+    for i in range(len(all_words)): # on parcours tout les mots du corpus
+        assert all_words[i] == tf_sentence[i][0] # on vérifie que tf_sentence est bien trié dans le même ordre que la liste all_words
+        word_tf_idf = [all_words[i]]
+        for j in range(len(tf_sentence[i])):
+            word_tf_idf.append(idf_dict[j] * tf_sentence[i][j]) # on ajoute à la matrice tf_idf multiplie les tf_scores par les idf_scores
+    return tf_idf
 
 
 # Call of the function
