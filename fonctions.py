@@ -467,16 +467,22 @@ def common_words(set_one:set, set_two:set) -> set:
     return set_one|set_two
 
 
-def tf_list(sentence_words:list, all_words:list, idf_score:list)->list:
-    return_list = []
+def tf_list(sentence_words:list, all_words:list, n_docs:int) -> list:
+    """
+    :param sentence_words: list - liste de tout les mots de la phrase entré par l'utilisateur
+    :param all_words: list - liste contenant tout les mots du corpus
+    :param n_docs: int - nombre de documents dans le corpus
+    :return: list - liste contenant les scores tf de chaques mots de la phrase
+    """
+    return_list = [] # initialisation de la liste contenant les scores tf
     for i in range(len(all_words)):
-        return_list.append(all_words[i])
+        return_list.append(all_words[i]) # on met en première position le mot
         score = 0
-        if all_words[i] in sentence_words:
+        if all_words[i] in sentence_words: # si le mot du corpus se trouve dans la phrase de l'utilisateur
             for sentence_w in sentence_words:
                 if sentence_w == all_words[i]:
-                    score += 1
-        for j in range(len(idf_score[0])):
+                    score += 1 # on ajoute 1 pour chaque occurence du mot
+        for j in range(n_docs): # on ajoute ça valeur tf autant de fois qu'il y a de documents dans le corpus
             return_list.append(score)
     return return_list
 

@@ -23,6 +23,8 @@ all_words_list = words[0]
 presidents_words_list = words[1]
 
 # ***** calcule de la matrice TF-IDF *****
+idf_score = idf_score(cleaned_directory)
+tf_score = tf_score(cleaned_directory)
 tfidf_list = matrice_TF_IDF(cleaned_directory)
 print("Voici la matrice TF-IDF", tfidf_list)
 #print("Voici les mots ayants les meilleurs TF-IDF :", best_tfidf(tfidf_list))
@@ -34,10 +36,13 @@ print("Voici la matrice TF-IDF", tfidf_list)
 #print(useless_word_list(tfidf_list))
 
 
-# test fonctions
-
+# ***************** Traitement de la phrase entré par l'utilisateur *************************
 sentence = question_to_list("Bonjour, j'aimerais savoir, quel était le président qui c'est le plus interressé à l'écologie ?")
 print(sentence)
+sentence_tf = tf_list(sentence, all_words_list, len(files_name_list))
+sentence_tfidf =sentence_tf_idf(sentence_tf, all_words_list, idf_score)
+print(sentence_tf)
+print(sentence_tfidf)
 
 
 # ************* MENU **************
