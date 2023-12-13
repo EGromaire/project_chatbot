@@ -278,7 +278,7 @@ def idf_score(directory: str) -> dict:
                 is_in_speech = True
             if is_in_speech:
                 idf += 1
-        idf = math.log10(idf / len(list_of_speeches_string))  # calcul du score_IDF
+        idf = math.log10(len(list_of_speeches_string) / idf)  # calcul du score_IDF
         return_dict[word] = idf
     return return_dict
 
@@ -294,6 +294,8 @@ def matrice_TF_IDF(directory: str) -> list:
     idf = idf_score(directory)
     tf = tf_score(directory)
     all_words = words_of_directory(directory)[0]  # list contenant tous les mots du corpus
+    print("voilà", idf)
+    print("voici tf", tf)
     for word in all_words:  # on parcourt la liste
         tf_idf_word = [word]
         for speech_tf_score in tf[word]:
@@ -311,7 +313,7 @@ def useless_word(list_of_tfidf_scores: list) -> bool:
     """
     i = 1
     # on parcourt la liste des scores du mot tant que le score TF-IDF est inférieur ou égal à 0.2
-    while i < len(list_of_tfidf_scores) and list_of_tfidf_scores[i] <= 0.2:
+    while i < len(list_of_tfidf_scores) and list_of_tfidf_scores[i] == 0:
         i += 1
     if i == len(list_of_tfidf_scores):
         return True
@@ -468,7 +470,7 @@ def common_words(set_one:set, set_two:set) -> set:
 def tf_list(sentence_words:list, all_words:list, idf_score:list)->list:
     return_list = []
     for i in range(len(all_words)):
-        return_list.append(word[i])
+        return_list.append(all_words[i])
         score = 0
         if all_words[i] in sentence_words:
             for sentence_w in sentence_words:
@@ -513,34 +515,35 @@ def vector_magnitude(vector):
 
 
 def cosine_similarity(vector_1:list, vector_2:list) -> float:
-    return  scalar_product(vector_1, vector_2) / (vector_magnitude(vector_1) * vector_magnitude(vector_2))
+    return scalar_product(vector_1, vector_2) / (vector_magnitude(vector_1) * vector_magnitude(vector_2))
 
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
 files_name_list = list_of_files(directory, "txt")
 presidents_names = extracted_names_list(files_name_list)
-print(presidents_names)
+#print(presidents_names)
 presidents_names = add_first_name(presidents_names)
 tf_score_dict = tf_score(cleaned_directory)
 idf_score_dict = idf_score(cleaned_directory)
 print_names(presidents_names)
 cleaning_files(files_name_list)
 
-print(tf_score_dict)
-print(idf_score_dict)
+#print(tf_score_dict)
+#print(idf_score_dict)
 
 tfidf_list = matrice_TF_IDF(cleaned_directory)
-print(best_tfidf(tfidf_list))
+#print(best_tfidf(tfidf_list))
+print("Voici les tfidf", tfidf_list)
 
-print_names(extracted_names_list(word_used('nation', files_name_list, tf_score_dict)))
-print(word_most_used('nation', files_name_list, tf_score_dict))
+#print_names(extracted_names_list(word_used('nation', files_name_list, tf_score_dict)))
+#print(word_most_used('nation', files_name_list, tf_score_dict))
 
-#print(useless_words(tf_score(cleaned_directory)))
+print(useless_word_list(tfidf_list))
 
 #print((words_of_directory(cleaned_directory)))
 
-
+"""
 # ************* MENU **************
 in_menu = True
 # boucle tant que l'on a pas fermé le menu
@@ -582,4 +585,4 @@ while in_menu:
         time.sleep(3)
         print("\nRetour au menu principale.")
         time.sleep(2.5)
-
+"""
