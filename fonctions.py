@@ -492,7 +492,7 @@ def sentence_tf_idf(tf_sentence:list, all_words:list, idf_dict:dict):
     return tf_idf
 
 
-def scalar_product(vector_1:list, vector_2:list) -> int:
+def scalar_product(vector_1:list, vector_2:list) -> float:
     """
     :param vector_1: liste d'entiers
     :param vecteur_2: liste d'entiers
@@ -508,6 +508,9 @@ def scalar_product(vector_1:list, vector_2:list) -> int:
 def vector_magnitude(vector):
     return math.sqrt(scalar_product(vector, vector))
 
+
+def cosine_similarity(vector_1:list, vector_2:list) -> float:
+    return  scalar_product(vector_1, vector_2) / (vector_magnitude(vector_1) * vector_magnitude(vector_2))
 
 # Call of the function
 directory = "./speeches"
