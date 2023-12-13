@@ -476,14 +476,15 @@ def tf_list(sentence_words:list, all_words:list, n_docs:int) -> list:
     """
     return_list = [] # initialisation de la liste contenant les scores tf
     for i in range(len(all_words)):
-        return_list.append(all_words[i]) # on met en première position le mot
+        sub_list = [all_words[i]] # on met le mot en première deposition de la sous-liste
         score = 0
         if all_words[i] in sentence_words: # si le mot du corpus se trouve dans la phrase de l'utilisateur
             for sentence_w in sentence_words:
                 if sentence_w == all_words[i]:
                     score += 1 # on ajoute 1 pour chaque occurence du mot
         for j in range(n_docs): # on ajoute ça valeur tf autant de fois qu'il y a de documents dans le corpus
-            return_list.append(score)
+            sub_list.append(score)
+        return_list.append(sub_list) # on ajoute la sous-liste à la liste
     return return_list
 
 
@@ -496,10 +497,14 @@ def sentence_tf_idf(tf_sentence:list, all_words:list, idf_dict:dict):
     """
     tf_idf = [] # initialisation de la matrice tf_idf
     for i in range(len(all_words)): # on parcours tout les mots du corpus
-        assert all_words[i] == tf_sentence[i][0] # on vérifie que tf_sentence est bien trié dans le même ordre que la liste all_words
         word_tf_idf = [all_words[i]]
-        for j in range(len(tf_sentence[i])):
-            word_tf_idf.append(idf_dict[j] * tf_sentence[i][j]) # on ajoute à la matrice tf_idf multiplie les tf_scores par les idf_scores
+        for j in range(len(tf_sentence[i]) - 1):
+            print(idf_dict[all_words[i]])
+            print("ça s'affiche", idf_dict[all_words[i]])
+            print(tf_sentence[i])
+            print(type(idf_dict[all_words[i]]), type(tf_sentence[i][j + 1]))
+            word_tf_idf.append(idf_dict[all_words[i]] * tf_sentence[i][j + 1]) # on ajoute à la matrice tf_idf multiplie les tf_scores par les idf_scores
+        tf_idf.append(word_tf_idf)
     return tf_idf
 
 

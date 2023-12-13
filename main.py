@@ -42,7 +42,7 @@ print(sentence)
 sentence_tf = tf_list(sentence, all_words_list, len(files_name_list))
 sentence_tfidf =sentence_tf_idf(sentence_tf, all_words_list, idf_score)
 print(sentence_tf)
-print(sentence_tfidf)
+print("Voici le tf idf de la phrase", sentence_tfidf)
 
 
 # ************* MENU **************
@@ -59,7 +59,7 @@ while in_menu:
     if user_input == '1':
         in_menu = False  # fin de la boucle, fin du menu
     elif user_input == '2':
-        print(f"{f.green_president(files_name_list, tf_score_dict)} est le tout premier président à avoir parlé d'écologie et de climat.")
+        print(f"{green_president(files_name_list, tf_score_dict)} est le tout premier président à avoir parlé d'écologie et de climat.")
     elif user_input == '3':
         print("\nExemple de saisie possible : Chirac")
         president = input("Saisissez le nom de famille du président dont il est question : ")
