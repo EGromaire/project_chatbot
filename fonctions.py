@@ -144,7 +144,6 @@ def cleaning_files(file_name_list: list):
         file.write(cleaning_string(speech))
 
 
-
 def cleaning_string(string: str) -> str:
     cleaned_string = ''
     i = 0
@@ -179,6 +178,10 @@ def cleaning_string(string: str) -> str:
         i += 1
     cleaned_string = replace_char(cleaned_string, "  ", " ")
     return cleaned_string
+
+
+def question_to_list(question: str) -> list:
+    return split_char(cleaning_string(question), " ")
 
 
 def occurrence(list_of_words: list, directory: str) -> dict:
