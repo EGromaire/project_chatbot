@@ -118,8 +118,18 @@ def print_names(names: list) -> None:
         display += f"\n\t\t-{name}"  # ajoute à display les noms des présidents contenus dans la liste (names)
     print(display)
 
+def cleaning_files(file_name_list: list):
+    if not os.path.exists("cleaned"):
+        os.mkdir("cleaned")
+    for name in files_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
+        file = open("speeches/" + name, "r", encoding="UTF8")
+        speech = file.readlines()
+        for line in speech:
 
-def cleaning_files(files_name_list: list) -> None:
+
+
+
+def cleaning_string(files_name_list: list) -> None:
     """
     FONCTION cleaning_files
     :param files_name_list: liste des noms de fichiers
@@ -127,39 +137,30 @@ def cleaning_files(files_name_list: list) -> None:
     prend en entrée la liste des noms des fichiers des discours des présidents, créé un répertoire "cleaned" et ajoute
     à ce répertoire les fichiers des discours des présidents tout en minuscule, sans les caractères spéciaux
     """
-    if not os.path.exists("cleaned"):
-        os.mkdir("cleaned")
-    for name in files_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
-        file = open("speeches/" + name, "r", encoding="UTF8")
-        speech = file.readlines()
-        cleaned_speech = ""
-        for line in speech:  # parcourir les lignes de chaque fichiers
-            for letter in line:  # parcourir les caractères de chaque lignes
-                # Si le caractère est une lettre majuscule, on la convertie en minuscule
-                if 65 <= ord(letter) <= 90:
-                    cleaned_speech += chr(ord(letter) + 32)
-                # Si le caractère est un ', un - ou un espace, on le remplace par un espace
-                elif letter == "'" or letter == "-" or letter == " ":
-                    cleaned_speech += " "
-                # Si le caractère est une lettre miniscule, on le laisse tel quel
-                elif 97 <= ord(letter) <= 122:
-                    cleaned_speech += letter
-                # remplace les accents
-                elif letter in "éèêëçàâùôïî":
-                    cleaned_speech += letter
-                # si le caractère est un saut de ligne, on le laisse tel quel
-                elif letter == "\n":
-                    cleaned_speech += " "
-                # tous les autres caractères ne sont pas ajoutés
-        cleaned_speech = replace_char(cleaned_speech, " d ", " de ")
-        cleaned_speech = replace_char(cleaned_speech, "  ", " ")
-        cleaned_speech = replace_char(cleaned_speech, " qu ", " que ")
-        cleaned_speech = replace_char(cleaned_speech, " j ", " je ")
-        cleaned_speech = replace_char(cleaned_speech, " l ", random.choice([' le ', ' la ']))
-        file.close()
-        new_file = open("cleaned/cleaned_" + name, "w", encoding='UTF8')
-        new_file.write(cleaned_speech)
-        new_file.close()
+
+    for letter in line:  # parcourir les caractères de chaque lignes
+        # Si le caractère est une lettre majuscule, on la convertie en minuscule
+        if 65 <= ord(letter) <= 90:
+            cleaned_string += chr(ord(letter) + 32)
+        # Si le caractère est un ', un - ou un espace, on le remplace par un espace
+        elif letter == "'" or letter == "-" or letter == " ":
+            cleaned_string += " "
+        # Si le caractère est une lettre miniscule, on le laisse tel quel
+        elif 97 <= ord(letter) <= 122:
+            cleaned_string += letter
+        # remplace les accents
+        elif letter in "éèêëçàâùôïî":
+            cleaned_string += letter
+        # si le caractère est un saut de ligne, on le laisse tel quel
+        elif letter == "\n":
+            cleaned_string += " "
+        # tous les autres caractères ne sont pas ajoutés
+        cleaned_string = replace_char(cleaned_string, " d ", " de ")
+        cleaned_string = replace_char(cleaned_string, "  ", " ")
+        cleaned_string = replace_char(cleaned_string, " qu ", " que ")
+        cleaned_string = replace_char(cleaned_string, " j ", " je ")
+        cleaned_string = replace_char(cleaned_string, " l ", random.choice([' le ', ' la ']))
+
 
 
 def occurrence(string: str, directory: str) -> dict:
@@ -447,6 +448,9 @@ def common_words(set_one:set, set_two:set) -> set:
     return set_one|set_two
 
 
+
+
+
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
@@ -457,7 +461,7 @@ presidents_names = add_first_name(presidents_names)
 tf_score_dict = tf_score(cleaned_directory)
 idf_score_dict = idf_score(cleaned_directory)
 print_names(presidents_names)
-cleaning_files(files_name_list)
+cleaning_string(files_name_list)
 
 print(tf_score_dict)
 print(idf_score_dict)
