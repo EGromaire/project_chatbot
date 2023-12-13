@@ -491,6 +491,24 @@ def sentence_tf_idf(tf_sentence:list, all_words:list, idf_dict:dict):
             word_tf_idf.append(idf_dict[j] * tf_sentence[i][j]) # on ajoute à la matrice tf_idf multiplie les tf_scores par les idf_scores
     return tf_idf
 
+
+def scalar_product(vector_1:list, vector_2:list) -> int:
+    """
+    :param vector_1: liste d'entiers
+    :param vecteur_2: liste d'entiers
+    :return: somme des produit des entiers de même indice
+    """
+    assert len(vector_1) == len(vector_2) # on vérifie que les deux listes soient bien de même longueur
+    product = 0 # initialisation du produit scalaire
+    for i in range(len(vector_1)): # on parcourt les vecteurs
+        product += vector_1[i] * vector_2[i] # on ajoute le produit des valeurs de même indice
+    return product
+
+
+def vector_magnitude(vector):
+    return math.sqrt(scalar_product(vector, vector))
+
+
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
