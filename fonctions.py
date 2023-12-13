@@ -121,46 +121,52 @@ def print_names(names: list) -> None:
 def cleaning_files(file_name_list: list):
     if not os.path.exists("cleaned"):
         os.mkdir("cleaned")
-    for name in files_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
+    for name in file_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
         file = open("speeches/" + name, "r", encoding="UTF8")
-        speech = file.readlines()
-        for line in speech:
+        speech_list = file.readlines()
+        file.close()
+        speech = ''
+        for line in speech_list:
+            speech += line
+        file = open("cleaned/" + "cleaned_" + name, "w", encoding="UTF8")
+        file.write(cleaning_string(speech))
 
 
 
-
-def cleaning_string(files_name_list: list) -> None:
-    """
-    FONCTION cleaning_files
-    :param files_name_list: liste des noms de fichiers
-    :return: None
-    prend en entrée la liste des noms des fichiers des discours des présidents, créé un répertoire "cleaned" et ajoute
-    à ce répertoire les fichiers des discours des présidents tout en minuscule, sans les caractères spéciaux
-    """
-
-    for letter in line:  # parcourir les caractères de chaque lignes
-        # Si le caractère est une lettre majuscule, on la convertie en minuscule
-        if 65 <= ord(letter) <= 90:
-            cleaned_string += chr(ord(letter) + 32)
+def cleaning_string(string: str) -> str:
+    cleaned_string = ''
+    i = 0
+    while i < len(string):  # parcourir les caractères de chaque lignes
         # Si le caractère est un ', un - ou un espace, on le remplace par un espace
-        elif letter == "'" or letter == "-" or letter == " ":
+        if string[i] in "-_ '" and string[i+1] != " ":
             cleaned_string += " "
+        if string[i] == "\n":
+            cleaned_string += " "
+        if string[i] in "dntjm" and string[i-1] == " " and string[i+1] == "'":
+            cleaned_string += string[i] + "e "
+            i += 1
+        if string[i] in "DNTJM" and string[i+1] == "'":
+            cleaned_string += chr(ord(string[i])+32) + "e "
+            i += 1
+        if string[i] in "lL" and string[i+1] == "'":
+            cleaned_string += random.choice(["le ", "la "])
+            i += 1
+        if string[i] in "qQ" and string[i+1] == "u" and string[i+2] == "'":
+            cleaned_string += "que "
+            i += 2
+        # Si le caractère est une lettre majuscule, on la convertie en minuscule
+        elif 65 <= ord(string[i]) <= 90:
+            cleaned_string += chr(ord(string[i]) + 32)
         # Si le caractère est une lettre miniscule, on le laisse tel quel
-        elif 97 <= ord(letter) <= 122:
-            cleaned_string += letter
+        elif 97 <= ord(string[i]) <= 122:
+            cleaned_string += string[i]
         # remplace les accents
-        elif letter in "éèêëçàâùôïî":
-            cleaned_string += letter
-        # si le caractère est un saut de ligne, on le laisse tel quel
-        elif letter == "\n":
-            cleaned_string += " "
+        elif string[i] in "éèêëçàâùôïî1234567890":
+            cleaned_string += string[i]
         # tous les autres caractères ne sont pas ajoutés
-        cleaned_string = replace_char(cleaned_string, " d ", " de ")
-        cleaned_string = replace_char(cleaned_string, "  ", " ")
-        cleaned_string = replace_char(cleaned_string, " qu ", " que ")
-        cleaned_string = replace_char(cleaned_string, " j ", " je ")
-        cleaned_string = replace_char(cleaned_string, " l ", random.choice([' le ', ' la ']))
-
+        i += 1
+    cleaned_string = replace_char(cleaned_string, "  ", " ")
+    return cleaned_string
 
 
 def occurrence(string: str, directory: str) -> dict:
@@ -461,7 +467,7 @@ presidents_names = add_first_name(presidents_names)
 tf_score_dict = tf_score(cleaned_directory)
 idf_score_dict = idf_score(cleaned_directory)
 print_names(presidents_names)
-cleaning_string(files_name_list)
+cleaning_files(files_name_list)
 
 print(tf_score_dict)
 print(idf_score_dict)
