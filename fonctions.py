@@ -4,6 +4,18 @@ import random
 import time
 
 
+def tri_selection(liste:list):
+    for i in range(len(liste)):
+        # Trouver le minimum de la sous-liste
+        min = i
+        for j in range(i + 1, len(liste)):
+            if liste[min] > liste[j]:
+                min = j
+        # mettre le minimum en première position
+        liste[i], liste[min] = liste[min], liste[i]
+    return liste
+
+
 def split_char(string: str, char: str) -> list:
     """
     FONCTION split_char
@@ -118,6 +130,19 @@ def print_names(names: list) -> None:
         display += f"\n\t\t-{name}"  # ajoute à display les noms des présidents contenus dans la liste (names)
     print(display)
 
+def cleaning_files(file_name_list: list):
+    if not os.path.exists("cleaned"):
+        os.mkdir("cleaned")
+    for name in file_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
+        file = open("speeches/" + name, "r", encoding="UTF8")
+        speech_list = file.readlines()
+        file.close()
+        speech = ''
+        for line in speech_list:
+            speech += line
+        file = open("cleaned/" + "cleaned_" + name, "w", encoding="UTF8")
+        file.write(cleaning_string(speech))
+
 
 def cleaning_string(string: str) -> str:
     cleaned_string = ''
@@ -155,38 +180,23 @@ def cleaning_string(string: str) -> str:
     return cleaned_string
 
 
-def cleaning_files(file_name_list: list):
-    if not os.path.exists("cleaned"):
-        os.mkdir("cleaned")
-    for name in file_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
-        file = open("speeches/" + name, "r", encoding="UTF8")
-        speech_list = file.readlines()
-        file.close()
-        speech = ''
-        for line in speech_list:
-            speech += line
-        file = open("cleaned/" + "cleaned_" + name, "w", encoding="UTF8")
-        file.write(cleaning_string(speech))
-
 
 def question_to_list(question: str) -> list:
-    return split_char(cleaning_string(question))
+    return split_char(cleaning_string(question), " ")
 
 
-def occurrence(string: str, directory: str) -> dict:
+def occurrence(list_of_words: list, directory: str) -> dict:
     """
     FONCTION occurrence
     :param directory:
-    :param string: str
+    :param list_of_words: list contenant un ensemble de mots
     :return: dict
     Fonctions prenant en paramètre une chaine de caractères, renvoyant un dictionnaire contenant le nombre
     d'occurrences de chaque mot de la chaine de caractères
     """
     return_dict = {}  # initialisations du dictionnaire
-    list_of_words = split_char(string," ")  # on met tous les mots dans une liste
-    set_of_words = words_of_directory(directory)[
-        0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
-    for word in set_of_words:  # on parcourt le set
+    set_of_words = words_of_directory(directory)[0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
+    for word in set_of_words:  # on parcourt la liste
         occurence_count = 0
         for paragraph_word in list_of_words:  # on parcourt le string principal
             if word == paragraph_word:
@@ -196,7 +206,7 @@ def occurrence(string: str, directory: str) -> dict:
     return return_dict
 
 
-def words_of_directory(directory: str) -> (list, set):
+def words_of_directory(directory: str) -> (list, list):
     """
     FONCTION list_words
     :param directory: str
@@ -206,7 +216,7 @@ def words_of_directory(directory: str) -> (list, set):
     texte (.txt) de ce répertoire
     """
     l_files = list_of_files(directory, "txt")
-    set_words = []
+    all_words = []
     l_words = []
     for name in l_files:
         list_of_words_in_file = []
@@ -216,9 +226,9 @@ def words_of_directory(directory: str) -> (list, set):
         for word in words:
             if word != '':
                 list_of_words_in_file.append(word)
-                set_words.append(word)
+                all_words.append(word)
         l_words.append(list_of_words_in_file)
-    return set(set_words), l_words
+    return tri_selection(list(set(all_words))), l_words
 
 
 def tf_score(directory: str) -> dict:
@@ -235,13 +245,11 @@ def tf_score(directory: str) -> dict:
     list_dicts = []
     list_of_words = words_of_directory(directory)[1]
     for speech in list_of_words:  # on parcourt la liste des mots des discours des présidents
-        speech_string = ""
-        for word in speech:
-            speech_string += word + " "
-        list_dicts.append(occurrence(speech_string, directory))
+        list_dicts.append(occurrence(speech, directory))
     for key in list_dicts[0]:
         word_score = []  # initialisation de la liste contenant les scores du mot en fonction du fichier text
-        for dico in list_dicts:
+        # on fait fusionner tout les dictionnaires afin d'en avoir un seul contenant les score tf de chaque mots en fonction du discours
+        for dico in list_dicts: # on parcours chaque dictionnaires
             speech_score = 0
             for items in dico.items():
                 if items[0] == key:
@@ -259,11 +267,10 @@ def idf_score(directory: str) -> dict:
     fonction qui assigne à chaque mot son score IDF dans un dictionnaire
     """
     return_dict = {}  # initialisations du dictionnaire
-    set_of_words = words_of_directory(directory)[0]  # set dans lequel se trouve tous les mots sans doublons
-    list_of_speeches_string = words_of_directory(directory)[
-        1]  # liste à deux dimensions contenant tous les mots, de chaque speech
+    all_words = words_of_directory(directory)[0]  # set dans lequel se trouve tous les mots sans doublons
+    list_of_speeches_string = words_of_directory(directory)[1]  # liste à deux dimensions contenant tous les mots, de chaque speech
 
-    for word in set_of_words:  # on parcourt tous les mots du set
+    for word in all_words:  # on parcourt tous les mots du set
         idf = 0
         for speech in list_of_speeches_string:
             is_in_speech = False
@@ -271,7 +278,7 @@ def idf_score(directory: str) -> dict:
                 is_in_speech = True
             if is_in_speech:
                 idf += 1
-        idf = math.log10(idf / len(list_of_speeches_string))  # calcul du score_IDF
+        idf = math.log10(len(list_of_speeches_string) / idf)  # calcul du score_IDF
         return_dict[word] = idf
     return return_dict
 
@@ -286,8 +293,8 @@ def matrice_TF_IDF(directory: str) -> list:
     tf_idf_score = []
     idf = idf_score(directory)
     tf = tf_score(directory)
-    set_of_words = words_of_directory(directory)[0]  # set contenant tous les mots des discours des présidents
-    for word in set_of_words:  # on parcourt le set
+    all_words = words_of_directory(directory)[0]  # list contenant tous les mots du corpus
+    for word in all_words:  # on parcourt la liste
         tf_idf_word = [word]
         for speech_tf_score in tf[word]:
             tf_idf_word.append(speech_tf_score * idf[word])  # calcule du score TF-IDF du mot, et ajout dans la matrice
@@ -304,7 +311,7 @@ def useless_word(list_of_tfidf_scores: list) -> bool:
     """
     i = 1
     # on parcourt la liste des scores du mot tant que le score TF-IDF est inférieur ou égal à 0.2
-    while i < len(list_of_tfidf_scores) and list_of_tfidf_scores[i] <= 0.2:
+    while i < len(list_of_tfidf_scores) and list_of_tfidf_scores[i] == 0:
         i += 1
     if i == len(list_of_tfidf_scores):
         return True
@@ -458,78 +465,64 @@ def common_words(set_one:set, set_two:set) -> set:
     return set_one|set_two
 
 
+def tf_list(sentence_words:list, all_words:list, n_docs:int) -> list:
+    """
+    :param sentence_words: list - liste de tout les mots de la phrase entré par l'utilisateur
+    :param all_words: list - liste contenant tout les mots du corpus
+    :param n_docs: int - nombre de documents dans le corpus
+    :return: list - liste contenant les scores tf de chaques mots de la phrase
+    """
+    return_list = [] # initialisation de la liste contenant les scores tf
+    for i in range(len(all_words)):
+        sub_list = [all_words[i]] # on met le mot en première deposition de la sous-liste
+        score = 0
+        if all_words[i] in sentence_words: # si le mot du corpus se trouve dans la phrase de l'utilisateur
+            for sentence_w in sentence_words:
+                if sentence_w == all_words[i]:
+                    score += 1 # on ajoute 1 pour chaque occurence du mot
+        for j in range(n_docs): # on ajoute ça valeur tf autant de fois qu'il y a de documents dans le corpus
+            sub_list.append(score)
+        return_list.append(sub_list) # on ajoute la sous-liste à la liste
+    return return_list
 
 
-
-<<<<<<< Updated upstream
-# Call of the function
-directory = "./speeches"
-cleaned_directory = "./cleaned"
-files_name_list = list_of_files(directory, "txt")
-presidents_names = extracted_names_list(files_name_list)
-print(presidents_names)
-presidents_names = add_first_name(presidents_names)
-tf_score_dict = tf_score(cleaned_directory)
-idf_score_dict = idf_score(cleaned_directory)
-print_names(presidents_names)
-cleaning_files(files_name_list)
-
-print(tf_score_dict)
-print(idf_score_dict)
-
-tfidf_list = matrice_TF_IDF(cleaned_directory)
-print(best_tfidf(tfidf_list))
-
-print_names(extracted_names_list(word_used('nation', files_name_list, tf_score_dict)))
-print(word_most_used('nation', files_name_list, tf_score_dict))
-
-#print(useless_words(tf_score(cleaned_directory)))
-
-#print((words_of_directory(cleaned_directory)))
+def sentence_tf_idf(tf_sentence:list, all_words:list, idf_dict:dict):
+    """
+    :param tf_sentence: liste de tout les mots de la question de l'utilisateur
+    :param all_words: liste de tout les mots du corpus
+    :param idf_dict: dictionnaire des scores idf de tout les mots du corpus
+    :return: list : matrice tf_idf de la question de l'utilisateur
+    """
+    tf_idf = [] # initialisation de la matrice tf_idf
+    for i in range(len(all_words)): # on parcours tout les mots du corpus
+        word_tf_idf = [all_words[i]]
+        for j in range(len(tf_sentence[i]) - 1):
+            word_tf_idf.append(idf_dict[all_words[i]] * tf_sentence[i][j + 1]) # on ajoute à la matrice tf_idf multiplie les tf_scores par les idf_scores
+        tf_idf.append(word_tf_idf)
+    return tf_idf
 
 
-# ************* MENU **************
-in_menu = True
-# boucle tant que l'on a pas fermé le menu
-while in_menu:
-    print("\n\n\t\t\t ********* Bonjour, bienvenue dans le menu *********")
-    print("\t-Si vous souhaitez fermer le menu entrez 1")
-    print("\t-Si vous souhaitez connaitre le nom du premier président à avoir parlé d'écologie, entrez 2")
-    print("\t-Si vous souhaitez connaitre les mots les plus répétés par un certain président, entrez 3")
-    print("\t-Si vous souhaitez connaître le nom du président à avoir le plus répété un certain mot, entrez 4")
-    user_input = input("\nSaisissez le numéro de l'action que vous souhaitez exécuter : ")
-    time.sleep(2)
-    if user_input == '1':
-        in_menu = False  # fin de la boucle, fin du menu
-    elif user_input == '2':
-        print(f"{green_president(files_name_list, tf_score_dict)} est le tout premier président à avoir parlé d'écologie et de climat.")
-    elif user_input == '3':
-        print("\nExemple de saisie possible : Chirac")
-        president = input("Saisissez le nom de famille du président dont il est question : ")
-        if president in presidents_names:
-            result_words = most_used_words_by_president(president, files_name_list, tf_score_dict)
-            print(f"Voici les 10 mots les plus employé par la président {president} : ")
-            for word in result_words:
-                print(f"\t\t-{word}")
-        else:
-            print("\t\t*** ERREUR DE SAISIE ***")
-            print("Aucune information relative au président que vous avez saisi.")
-    elif user_input == '4':
-        word = input("\nSaisissez le mot dont il est question : ")
-        if word in tf_score_dict.keys():
-            resultat = word_most_used(word, files_name_list, tf_score_dict)
-            print(f"\n\n-----Le président {resultat}, est le président ayant le plus répwété le mot ~{word}~ lors de son discour d'inverstiture-----")
-        else:
-            print("Ce mot n'a jamais été employé par aucun président")
-    else:
-        print("\t\t*** ERREUR DE SAISIE ***")
-        print("La valeur que vous avez saisie n'est pas valide !")
+def scalar_product(vector_1:list, vector_2:list) -> float:
+    """
+    :param vector_1: liste de nombres
+    :param vector_2: liste de nombres
+    :return: somme des produit des entiers de même indice
+    """
+    assert len(vector_1) == len(vector_2) # on vérifie que les deux listes soient bien de même longueur
+    product = 0 # initialisation du produit scalaire
+    for i in range(len(vector_1)): # on parcourt les vecteurs
+        product += vector_1[i] * vector_2[i] # on ajoute le produit des valeurs de même indice
+    return product
 
-    if in_menu:
-        time.sleep(3)
-        print("\nRetour au menu principale.")
-        time.sleep(2.5)
-=======
+
+def vector_magnitude(vector):
+    return math.sqrt(scalar_product(vector, vector))
+
+
+def cosine_similarity(vector_1:list, vector_2:list) -> float:
+    return scalar_product(vector_1, vector_2) / (vector_magnitude(vector_1) * vector_magnitude(vector_2))
+
+
 def pertinent_file(corpus_tf_idf: list, sentance_tf_idf: list, file_name_list: list) -> str:
     most_pertinent_file = ''
     max_cos_similarity = 0
@@ -556,5 +549,25 @@ def remove_useless_words_from_matrice(matrice_tfidf: list, list_of_useless_words
             copy_of_matrice.append(matrice_tfidf[i])
             all_words.append(matrice_tfidf[i][0])
     return (copy_of_matrice, all_words)
->>>>>>> Stashed changes
+
+
+
+
+
+def name_of_max_score_in_index_2(table:list[list]) -> str:
+    """
+    :param table: liste 2D contenant pour chaque sous liste, une chaine de caractère et
+    :return: str : 1er élément de la sous-liste ayant la plus grande valeur en 2ème position
+    """
+    max_index = 0
+    for i in range(1, len(table)):
+        if table[i][1] > table[max_index][1]:
+            max_index = i
+    return table[max_index][0]
+
+
+def best_sentence_tfidf(sentence_tfidf_list):
+    return name_of_max_score_in_index_2(sentence_tfidf_list)
+
+
 

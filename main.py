@@ -1,10 +1,4 @@
-<<<<<<< Updated upstream
-file = open("speeches/Nomination_Macron.txt", "r")
-for line in file:
-    print(line)
-    line = line.replace("e", "")
-    print(line)
-=======
+
 from fonctions import *
 import time
 
@@ -97,6 +91,6 @@ while in_menu:
         time.sleep(3)
         print("\nRetour au menu principale.")
         time.sleep(2.5)
->>>>>>> Stashed changes
+
 
 print(len({"bonjour":2}))
