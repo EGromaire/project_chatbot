@@ -151,17 +151,22 @@ def cleaning_string(string: str) -> str:
         # Si le caractère est un ', un - ou un espace, on le remplace par un espace
         if string[i] in "-_ '" and len(string) > i+1 and string[i+1] != " ":
             cleaned_string += " "
+        # si le caractère est un saut de ligne, on le remplace par un espace
         if string[i] == "\n":
             cleaned_string += " "
+        # on transforme d', n', t', j', m', en de, ne, te, je, me
         if i-1 >= 0 and string[i] in "dntjm" and string[i-1] == " " and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += string[i] + "e "
             i += 1
+        # la même condition est gérée avec des majuscules
         if string[i] in "DNTJM" and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += chr(ord(string[i])+32) + "e "
             i += 1
+        # on transforme l' en le/la
         if string[i] in "lL" and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += random.choice(["le ", "la "])
             i += 1
+        # on transforme qu' en que
         if string[i] in "qQ" and len(string) > i+2 and string[i+1] == "u" and string[i+2] == "'":
             cleaned_string += "que "
             i += 2
@@ -171,11 +176,12 @@ def cleaning_string(string: str) -> str:
         # Si le caractère est une lettre miniscule, on le laisse tel quel
         elif 97 <= ord(string[i]) <= 122:
             cleaned_string += string[i]
-        # remplace les accents
+        # remplace les accents et les chiffres
         elif string[i] in "éèêëçàâùôïî1234567890":
             cleaned_string += string[i]
         # tous les autres caractères ne sont pas ajoutés
         i += 1
+    # on remplace les doubles espaces par un simple
     cleaned_string = replace_char(cleaned_string, "  ", " ")
     return cleaned_string
 
@@ -524,13 +530,26 @@ def cosine_similarity(vector_1:list, vector_2:list) -> float:
 
 
 def pertinent_file(corpus_tf_idf: list, sentance_tf_idf: list, file_name_list: list) -> str:
+    """
+    FONCTION pertinent_file
+    :param corpus_tf_idf: matrice tf idf contenant les mots avec leur score tf idf dans chaque doc
+    :param sentance_tf_idf: matrice contenant le score tf idf de chaque mot dans la question
+    :param file_name_list: liste contenant tous les noms des fichiers du corpus
+    :return: le nom du fichier le plus pertinent par rapport à la qiestion posée
+    """
     most_pertinent_file = ''
     max_cos_similarity = 0
+    # on parcourt les fichiers un a un, donc on parcourt d'abord l'indice i
+    # à chaque changement d'indice de fichier
     for file in range(1, len(corpus_tf_idf[0])):
         cos_similarity = 0
+        # on initialise les listes qu'on utilisera pour la fonction cosine_similarity
+        # ces deux listes doivent contenir un mot et son score tf idf pour un fichier
+        # elles sont réinitialiséées à chaque changement de fichier
         list_tfidf_per_file = []
         list_tfidf_of_question = []
         for i in range(len(corpus_tf_idf)):
+            # on ajoute à ces deux listes les mots avec leur score tf idf pour un fichier spécifique
             list_tfidf_per_file.append(corpus_tf_idf[i][file])
             list_tfidf_of_question.append(sentance_tf_idf[i][file])
         cos_similarity = cosine_similarity(list_tfidf_per_file, list_tfidf_of_question)
@@ -542,6 +561,13 @@ def pertinent_file(corpus_tf_idf: list, sentance_tf_idf: list, file_name_list: l
 
 
 def remove_useless_words_from_matrice(matrice_tfidf: list, list_of_useless_words: list) -> (list, list):
+    """
+    Fonction remove_useless_words_from_matrice
+    :param matrice_tfidf: matrice contenant le score tf idf de chaque mot dans le corpus
+    :param list_of_useless_words: liste des mots jugés inutiles d'après la fonction useless_words
+    :return: deux listes : une liste 1d comprenant tous les mots du corpus excepté les mots inutiles
+    et une matrice 2d contenant le score tf idf des mots du corpus excepté les mots inutiles
+    """
     copy_of_matrice = []
     all_words = []
     for i in range(len(matrice_tfidf)):
