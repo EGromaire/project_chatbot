@@ -37,12 +37,14 @@ print("Voici la matrice TF-IDF", tfidf_list)
 
 
 # ***************** Traitement de la phrase entré par l'utilisateur *************************
-sentence = question_to_list("Bonjour, j'aimerais savoir, quel était le président qui c'est le plus interressé à l'écologie ?")
+sentence = question_to_list("Bonjour, j'aimerais savoir, quel était le président qui s'est le plus interressé à l'écologie ?")
 print(sentence)
 sentence_tf = tf_list(sentence, all_words_list, len(files_name_list))
 sentence_tfidf =sentence_tf_idf(sentence_tf, all_words_list, idf_score)
 print(sentence_tf)
 print("Voici le tf idf de la phrase", sentence_tfidf)
+max_sentence_tfidf = best_sentence_tfidf(sentence_tfidf)
+print(max_sentence_tfidf)
 
 
 # ************* MENU **************

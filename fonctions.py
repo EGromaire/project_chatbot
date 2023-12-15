@@ -267,8 +267,7 @@ def idf_score(directory: str) -> dict:
     """
     return_dict = {}  # initialisations du dictionnaire
     all_words = words_of_directory(directory)[0]  # set dans lequel se trouve tous les mots sans doublons
-    list_of_speeches_string = words_of_directory(directory)[
-        1]  # liste à deux dimensions contenant tous les mots, de chaque speech
+    list_of_speeches_string = words_of_directory(directory)[1]  # liste à deux dimensions contenant tous les mots, de chaque speech
 
     for word in all_words:  # on parcourt tous les mots du set
         idf = 0
@@ -510,8 +509,8 @@ def sentence_tf_idf(tf_sentence:list, all_words:list, idf_dict:dict):
 
 def scalar_product(vector_1:list, vector_2:list) -> float:
     """
-    :param vector_1: liste d'entiers
-    :param vecteur_2: liste d'entiers
+    :param vector_1: liste de nombres
+    :param vecteur_2: liste de nombres
     :return: somme des produit des entiers de même indice
     """
     assert len(vector_1) == len(vector_2) # on vérifie que les deux listes soient bien de même longueur
@@ -527,6 +526,26 @@ def vector_magnitude(vector):
 
 def cosine_similarity(vector_1:list, vector_2:list) -> float:
     return scalar_product(vector_1, vector_2) / (vector_magnitude(vector_1) * vector_magnitude(vector_2))
+
+
+def name_of_max_score_in_index_2(table:list[list]) -> str:
+    """
+    :param table: liste 2D contenant pour chaque sous liste, une chaine de caractère et
+    :return: str : 1er élément de la sous-liste ayant la plus grande valeur en 2ème position
+    """
+    max_index = 0
+    for i in range(1, len(table)):
+        if table[i][1] > table[max_index][1]:
+            max_index = i
+    return table[max_index][0]
+
+
+def best_sentence_tfidf(sentence_tfidf_list):
+    return name_of_max_score_in_index_2(sentence_tfidf_list)
+
+def first_occurence_sentence(word:str, directory:str):
+    file = open(directory, "r", encoding="UTF8"):
+        word
 
 
 
