@@ -2,6 +2,8 @@ from fonctions import *
 import time
 
 
+
+print("enculé de tes morts")
 ####################################################################################################################
 # *************************************** Call of the function ****************************************************#
 directory = "./speeches"
@@ -33,7 +35,8 @@ print("Voici la matrice TF-IDF", tfidf_list)
 # ***** Fonctionnalités suplémentaires *****
 #print_names(extracted_names_list(word_used('nation', files_name_list, tf_score_dict)))
 #print(word_most_used('nation', files_name_list, tf_score_dict))
-#print(useless_word_list(tfidf_list))
+print("ALlo")
+print("Les mots inutiles sont : ", useless_word_list(tfidf_list))
 
 
 # ***************** Traitement de la phrase entré par l'utilisateur *************************

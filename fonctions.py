@@ -293,8 +293,6 @@ def matrice_TF_IDF(directory: str) -> list:
     idf = idf_score(directory)
     tf = tf_score(directory)
     all_words = words_of_directory(directory)[0]  # list contenant tous les mots du corpus
-    print("voilà", idf)
-    print("voici tf", tf)
     for word in all_words:  # on parcourt la liste
         tf_idf_word = [word]
         for speech_tf_score in tf[word]:
@@ -498,10 +496,6 @@ def sentence_tf_idf(tf_sentence:list, all_words:list, idf_dict:dict):
     for i in range(len(all_words)): # on parcours tout les mots du corpus
         word_tf_idf = [all_words[i]]
         for j in range(len(tf_sentence[i]) - 1):
-            print(idf_dict[all_words[i]])
-            print("ça s'affiche", idf_dict[all_words[i]])
-            print(tf_sentence[i])
-            print(type(idf_dict[all_words[i]]), type(tf_sentence[i][j + 1]))
             word_tf_idf.append(idf_dict[all_words[i]] * tf_sentence[i][j + 1]) # on ajoute à la matrice tf_idf multiplie les tf_scores par les idf_scores
         tf_idf.append(word_tf_idf)
     return tf_idf
@@ -510,7 +504,7 @@ def sentence_tf_idf(tf_sentence:list, all_words:list, idf_dict:dict):
 def scalar_product(vector_1:list, vector_2:list) -> float:
     """
     :param vector_1: liste de nombres
-    :param vecteur_2: liste de nombres
+    :param vector_2: liste de nombres
     :return: somme des produit des entiers de même indice
     """
     assert len(vector_1) == len(vector_2) # on vérifie que les deux listes soient bien de même longueur
@@ -543,9 +537,50 @@ def name_of_max_score_in_index_2(table:list[list]) -> str:
 def best_sentence_tfidf(sentence_tfidf_list):
     return name_of_max_score_in_index_2(sentence_tfidf_list)
 
-def first_occurence_sentence(word:str, directory:str):
-    file = open(directory, "r", encoding="UTF8"):
-        word
+
+def occurences_in_final_positions(elements:list, list_3D_of_words:list)->list:
+    """
+    Fonctions prenant en paramètres une liste de caractères et une liste 3D de chaines de caractères et renvoyant une liste 2D
+    contenant les indices de chaque chaine de caractère de la liste (list_3D_of_words), ayant un éléments de la liste de caractères("éléments")
+    en dernière position.
+    :param elements: list - caractères dont ont cherche la position des occurences
+    :param list_3D_of_words: list - liste de chaines de caractères
+    :return: liste 2D contenant des entiers correspondant aux indices des occurences recherchés
+    """
+    index_list = []
+    for ligne in range(len(list_3D_of_words)): # on parcours chaque ligne du tableau
+        for colonne in list_3D_of_words[ligne]: # on parcours caractère par caractère
+            if list_3D_of_words[ligne][colonne] in elements: # s'il y a une occurence
+                index_list.append((ligne, colonne)) # on ajoute à la liste les positions (ligne, colonne) de l'occurence
+    return index_list
 
 
+def first_occurence_sentence(word:str, directory:str) -> str:
+    file = open(directory, "r", encoding="UTF8")
+    lines = file.readlines()
+    for l in range(len(lines)):
+        lines[l] = split_char(lines[l], " ")
 
+    index = False  # index égal faulse tant que l'on a pas trouvé sa première occurence
+    i = 0
+    j = 0
+    while i < len(lines) and index == False: # tant que l'on a pas trouvé l'occurence et que l'on a pas dépassé le nombre de lignes
+        j = 0 # on remet l'indice des colonne à 0
+        while i < len(lines[i]) and index == False: # tant que l'on a pas trouvé l'occurence et que l'on a pas dépassé le nombre de colonnes
+            if lines[i][j] == word:
+                index = [i, j] # on assigne à index les indices de sa première occurence
+            else:
+                j += 1 # on incrémente l'indice des colonnes
+        i += 1 # on incrémente l'indice des lignes
+
+    # On cherche les bornes de la phrase auquel appartient la première occurence du mot (word)
+    bornes = occurences_in_final_positions([".", "?", "!", "..."], lines) # on cherche toutes les fins de phrases contenu dans le text
+    m = 0 # indice permettant le parcours de la liste (bornes)
+    # on parcourt la liste des indices des ponctuations (bornes) tant que la borne actuel n'a pas dépassé l'emplacement du mot
+    while bornes[m][0] < index[0] or (bornes[m][0] == index[0] and bornes[m][1] <= index[1]):
+        m += 1
+
+    # On en déduit donc que la phrase se trouve entre les indices m et m-1
+    if m == [0, 0]:
+
+    sentence_words = lines[m]
