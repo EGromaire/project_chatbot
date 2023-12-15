@@ -124,24 +124,19 @@ def cleaning_string(string: str) -> str:
     i = 0
     while i < len(string):  # parcourir les caractères de chaque lignes
         # Si le caractère est un ', un - ou un espace, on le remplace par un espace
-        if string[i] in "-_ '" and string[i+1] != " ":
         if string[i] in "-_ '" and len(string) > i+1 and string[i+1] != " ":
             cleaned_string += " "
         if string[i] == "\n":
             cleaned_string += " "
-        if string[i] in "dntjm" and string[i-1] == " " and string[i+1] == "'":
         if i-1 >= 0 and string[i] in "dntjm" and string[i-1] == " " and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += string[i] + "e "
             i += 1
-        if string[i] in "DNTJM" and string[i+1] == "'":
         if string[i] in "DNTJM" and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += chr(ord(string[i])+32) + "e "
             i += 1
-        if string[i] in "lL" and string[i+1] == "'":
         if string[i] in "lL" and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += random.choice(["le ", "la "])
             i += 1
-        if string[i] in "qQ" and string[i+1] == "u" and string[i+2] == "'":
         if string[i] in "qQ" and len(string) > i+2 and string[i+1] == "u" and string[i+2] == "'":
             cleaned_string += "que "
             i += 2
@@ -466,6 +461,7 @@ def common_words(set_one:set, set_two:set) -> set:
 
 
 
+<<<<<<< Updated upstream
 # Call of the function
 directory = "./speeches"
 cleaned_directory = "./cleaned"
@@ -533,6 +529,7 @@ while in_menu:
         time.sleep(3)
         print("\nRetour au menu principale.")
         time.sleep(2.5)
+=======
 def pertinent_file(corpus_tf_idf: list, sentance_tf_idf: list, file_name_list: list) -> str:
     most_pertinent_file = ''
     max_cos_similarity = 0
