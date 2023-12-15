@@ -125,19 +125,24 @@ def cleaning_string(string: str) -> str:
     while i < len(string):  # parcourir les caractères de chaque lignes
         # Si le caractère est un ', un - ou un espace, on le remplace par un espace
         if string[i] in "-_ '" and string[i+1] != " ":
+        if string[i] in "-_ '" and len(string) > i+1 and string[i+1] != " ":
             cleaned_string += " "
         if string[i] == "\n":
             cleaned_string += " "
         if string[i] in "dntjm" and string[i-1] == " " and string[i+1] == "'":
+        if i-1 >= 0 and string[i] in "dntjm" and string[i-1] == " " and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += string[i] + "e "
             i += 1
         if string[i] in "DNTJM" and string[i+1] == "'":
+        if string[i] in "DNTJM" and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += chr(ord(string[i])+32) + "e "
             i += 1
         if string[i] in "lL" and string[i+1] == "'":
+        if string[i] in "lL" and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += random.choice(["le ", "la "])
             i += 1
         if string[i] in "qQ" and string[i+1] == "u" and string[i+2] == "'":
+        if string[i] in "qQ" and len(string) > i+2 and string[i+1] == "u" and string[i+2] == "'":
             cleaned_string += "que "
             i += 2
         # Si le caractère est une lettre majuscule, on la convertie en minuscule
@@ -528,4 +533,31 @@ while in_menu:
         time.sleep(3)
         print("\nRetour au menu principale.")
         time.sleep(2.5)
+def pertinent_file(corpus_tf_idf: list, sentance_tf_idf: list, file_name_list: list) -> str:
+    most_pertinent_file = ''
+    max_cos_similarity = 0
+    for file in range(1, len(corpus_tf_idf[0])):
+        cos_similarity = 0
+        list_tfidf_per_file = []
+        list_tfidf_of_question = []
+        for i in range(len(corpus_tf_idf)):
+            list_tfidf_per_file.append(corpus_tf_idf[i][file])
+            list_tfidf_of_question.append(sentance_tf_idf[i][file])
+        cos_similarity = cosine_similarity(list_tfidf_per_file, list_tfidf_of_question)
+        if cos_similarity > max_cos_similarity:
+            max_cos_similarity = cos_similarity
+            most_pertinent_file = file_name_list[file-1]
+    return most_pertinent_file
+
+
+
+def remove_useless_words_from_matrice(matrice_tfidf: list, list_of_useless_words: list) -> (list, list):
+    copy_of_matrice = []
+    all_words = []
+    for i in range(len(matrice_tfidf)):
+        if matrice_tfidf[i][0] not in list_of_useless_words:
+            copy_of_matrice.append(matrice_tfidf[i])
+            all_words.append(matrice_tfidf[i][0])
+    return (copy_of_matrice, all_words)
+>>>>>>> Stashed changes
 
