@@ -541,11 +541,12 @@ def best_sentence_tfidf(sentence_tfidf_list):
 def occurences_index(string:str, sub_str:str)->list:
     """Fonction renvoyant les indices des premiers caractères de chaque occurrence d'une chaine de caractère (sub_str)
     dans une chaine de caractères (string)"""
+    print("text", sub_str, string)
     index_list = [] # initialisation de la liste que l'on retourne
     for i in range(len(string)): # on parcourt la chaine de caractèer (string) caractère par caractère
         if string[i] == sub_str[0]: # si le premier caractère des deux chaines sont les mêmes alors on vérifie s'il y a une occurence de sub_string à cet endroit
             j = i  # on copie la valeur i dans j, pour parcourir la suite de la chaine et la comparer à sub_str
-            while sub_str[j - i] == string[i][j] and j - i < len(sub_str) - 1:
+            while sub_str[j - i] == string[j] and j - i < len(sub_str) - 1:
                 j += 1 # on incrémente j de la longueur de (sub_string) en vérifiant qu'on ne déborde pas de la chaine (string)
             if sub_str == string[i:j + 1]:  # on vérifie si les deux chaines de caractères sont bien les mêmes
                 index_list.append(j) # on ajoute l'indice du premier caractère à la liste que l'on retourne
@@ -554,38 +555,33 @@ def occurences_index(string:str, sub_str:str)->list:
     return index_list
 
 
-def all_occurrences_in_list(list_of_strings:list, sub_str:str)->list[int]:
-    """Fonction renvoyant les indices de toutes les occurrences d'une chaine de caractère (sub_str)
-    dans une liste de chaine de caractères (list_of_strings)"""
-    list_of_occurences = [] # initialisation de la liste contenant toutes les occurrences
-    for ligne in range(len(sub_str)): # on parcour les lignes de la liste (list_of_strings)
-        index = occurences_index(list_of_strings[ligne], sub_str) # liste de toute les occurrence de la ligne
-        if index[0] != -1: # on vérifie qu'il y ait bien des occurences de (sub_str) dans (list_of_strings[i])
-            for j in range(len(index)): # on parcourt la liste des indices de toutes les occurences
-                index.append([ligne, index[j]]) # on assigne à chaque indice d'occurence, le numéro de la ligne
-    return list_of_occurences
-
-def sentence_first_occurrence(sub_string, directory):
-    
+def list_to_string(table:list)->str:
+    string = ""
+    for ligne in table:
+        string += ligne
+    return string
 
 
-def index_occurrences(string:str, list_of_strings:list[str]) -> list:
-    """Fonction renvoyant les indices de chaque occurrence d'une liste de chaine de caractère (string) dans une liste de
-    chaines de caractères (list_of_strings)"""
-    index_list = []
-    for i in range(len(list_of_strings)):
-        assert len(string) <= len(list_of_strings[i])  # on vérifie que string aie bien une longueur
-        current_word = ""
+def file_to_string(file_path:str)->str:
+    """ Fonction retournant une chaine de caractère contenant le texte du fichier sans les \n de fin de ligne"""
+    file = open(file_path, "r", encoding='UTF8')
+    return replace_char(list_to_string(file.readlines()), "\n", " ")
 
-        for j in range(len(list_of_strings[i])): # on parcourt la chaine caractère par caractère
-            if list_of_strings[i][j] == string[0]:
-                k = j # on copie la valeur j dans k, pour parcourir la suite de la chaine de caractère
-                current_word += list_of_strings[i][k]
-                while string[k - j] == list_of_strings[i][k] and k - j < len(string) - 1:
-                    k += 1
-                    print(k, j)
-                if string == list_of_strings[i][j:k+1]: # on vérifie si les deux chaines de caractères sont bien les mêmes
-                    index_list.append([i, j])
-            current_word = ""
 
-    return index_list
+def first_occurence_sentence(sub_str, file_path:str):
+    text = file_to_string(file_path) # on récupère tout le document dans une chaine de caractère
+    first_occurence = occurences_index(text, sub_str)[0] # indice de la première occurrence de sub_str dans le texte
+    index = -2
+    previous_index = -2
+    i = 0
+    while i < len(text) - 1 and index < first_occurence: # on parcourt le texte caractère par caractère
+        if text[i] in ".?!":
+            previous_index, index = index, i
+        i += 1
+    if index == -2:
+        return ""
+    else:
+        return text[previous_index + 2:index]
+
+
+

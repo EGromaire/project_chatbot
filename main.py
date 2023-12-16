@@ -2,8 +2,6 @@ from fonctions import *
 import time
 
 
-
-print("enculé de tes morts")
 ####################################################################################################################
 # *************************************** Call of the function ****************************************************#
 directory = "./speeches"
@@ -48,6 +46,9 @@ print(sentence_tf)
 print("Voici le tf idf de la phrase", sentence_tfidf)
 max_sentence_tfidf = best_sentence_tfidf(sentence_tfidf)
 print(max_sentence_tfidf)
+
+print("Voici la phrase que vous cherchez :", first_occurence_sentence("quel", "./speeches/Nomination_Sarkozy.txt"))
+
 
 
 # ************* MENU **************
