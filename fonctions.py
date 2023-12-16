@@ -577,6 +577,31 @@ def remove_useless_words_from_matrice(matrice_tfidf: list, list_of_useless_words
     return (copy_of_matrice, all_words)
 
 
+def refine_answer(question_list: list, answer: str) -> str:
+    """
+    Fonction refine_answer
+    :param question_list: liste contenant les mots de la question non nettoyée
+    :param answer: la réponse trouvée par le programme sous forme de chaine de caractères
+    :return: la réponse retravaillée
+    """
+    question_starters = {
+        "Comment": "Après analyse, ",
+        "Pourquoi": "Car, ",
+        "Peux-tu": "Oui, bien sûr!"
+    }
+    answer_refined = ''
+    # conditions pour ajouter une majuscule et un point si besoin
+    if 97 <= answer[0] <= 122:
+        answer_refined = chr(ord(answer[0])-32) + answer[1:]
+    else:
+        answer_refined = answer
+    if answer[-1] != '.':
+        answer_refined += '.'
+    # on parcourt le dictionnaire pour trouver le début de phrase adéquate
+    for starter in question_starters.keys():
+        if question_list[0] == starter:
+            return question_starters[starter] + answer_refined
+    return answer_refined
 
 
 
