@@ -196,12 +196,12 @@ def occurrence(list_of_words: list, directory: str) -> dict:
     return_dict = {}  # initialisations du dictionnaire
     set_of_words = words_of_directory(directory)[0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
     for word in set_of_words:  # on parcourt la liste
-        occurence_count = 0
+        occurrence_count = 0
         for paragraph_word in list_of_words:  # on parcourt le string principal
             if word == paragraph_word:
-                occurence_count += 1
+                occurrence_count += 1
         return_dict[
-            word] = occurence_count  # on ajoute au dictionnaire le mot en clef et son nombre d'occurence en valeur
+            word] = occurrence_count  # on ajoute au dictionnaire le mot en clef et son nombre d'occurrence en valeur
     return return_dict
 
 
@@ -366,10 +366,10 @@ def word_used(word: str, file_name_list: list, tf_score: dict) -> list:
     :return: liste des présidents ayant utilisé le mot
     Fonction renvoyant le nom de présidents ayant utilisé le mot 'word'
     """
-    occurence_of_word = tf_score[word]
+    occurrence_of_word = tf_score[word]
     presidents_use_word = []
-    for i in range(len(occurence_of_word)):
-        if occurence_of_word[i] >= 1:
+    for i in range(len(occurrence_of_word)):
+        if occurrence_of_word[i] >= 1:
             presidents_use_word.append(file_name_list[i])
     return presidents_use_word
 
@@ -478,7 +478,7 @@ def tf_list(sentence_words:list, all_words:list, n_docs:int) -> list:
         if all_words[i] in sentence_words: # si le mot du corpus se trouve dans la phrase de l'utilisateur
             for sentence_w in sentence_words:
                 if sentence_w == all_words[i]:
-                    score += 1 # on ajoute 1 pour chaque occurence du mot
+                    score += 1 # on ajoute 1 pour chaque occurrence du mot
         for j in range(n_docs): # on ajoute ça valeur tf autant de fois qu'il y a de documents dans le corpus
             sub_list.append(score)
         return_list.append(sub_list) # on ajoute la sous-liste à la liste
@@ -538,8 +538,39 @@ def best_sentence_tfidf(sentence_tfidf_list):
     return name_of_max_score_in_index_2(sentence_tfidf_list)
 
 
-def index_occurences(string:str, list_of_strings:list[str]) -> list:
-    """Fonction renvoyant les indices de chaque occurence d'une liste de chaine de caractère (string) dans une liste de
+def occurences_index(string:str, sub_str:str)->list:
+    """Fonction renvoyant les indices des premiers caractères de chaque occurrence d'une chaine de caractère (sub_str)
+    dans une chaine de caractères (string)"""
+    index_list = [] # initialisation de la liste que l'on retourne
+    for i in range(len(string)): # on parcourt la chaine de caractèer (string) caractère par caractère
+        if string[i] == sub_str[0]: # si le premier caractère des deux chaines sont les mêmes alors on vérifie s'il y a une occurence de sub_string à cet endroit
+            j = i  # on copie la valeur i dans j, pour parcourir la suite de la chaine et la comparer à sub_str
+            while sub_str[j - i] == string[i][j] and j - i < len(sub_str) - 1:
+                j += 1 # on incrémente j de la longueur de (sub_string) en vérifiant qu'on ne déborde pas de la chaine (string)
+            if sub_str == string[i:j + 1]:  # on vérifie si les deux chaines de caractères sont bien les mêmes
+                index_list.append(j) # on ajoute l'indice du premier caractère à la liste que l'on retourne
+    if index_list == []:
+        return [-1]
+    return index_list
+
+
+def all_occurrences_in_list(list_of_strings:list, sub_str:str)->list[int]:
+    """Fonction renvoyant les indices de toutes les occurrences d'une chaine de caractère (sub_str)
+    dans une liste de chaine de caractères (list_of_strings)"""
+    list_of_occurences = [] # initialisation de la liste contenant toutes les occurrences
+    for ligne in range(len(sub_str)): # on parcour les lignes de la liste (list_of_strings)
+        index = occurences_index(list_of_strings[ligne], sub_str) # liste de toute les occurrence de la ligne
+        if index[0] != -1: # on vérifie qu'il y ait bien des occurences de (sub_str) dans (list_of_strings[i])
+            for j in range(len(index)): # on parcourt la liste des indices de toutes les occurences
+                index.append([ligne, index[j]]) # on assigne à chaque indice d'occurence, le numéro de la ligne
+    return list_of_occurences
+
+def sentence_first_occurrence(sub_string, directory):
+    
+
+
+def index_occurrences(string:str, list_of_strings:list[str]) -> list:
+    """Fonction renvoyant les indices de chaque occurrence d'une liste de chaine de caractère (string) dans une liste de
     chaines de caractères (list_of_strings)"""
     index_list = []
     for i in range(len(list_of_strings)):
@@ -553,7 +584,6 @@ def index_occurences(string:str, list_of_strings:list[str]) -> list:
                 while string[k - j] == list_of_strings[i][k] and k - j < len(string) - 1:
                     k += 1
                     print(k, j)
-                print("Y'a les :", string, list_of_strings[i][j:k+1])
                 if string == list_of_strings[i][j:k+1]: # on vérifie si les deux chaines de caractères sont bien les mêmes
                     index_list.append([i, j])
             current_word = ""
