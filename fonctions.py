@@ -556,6 +556,7 @@ def occurences_index(string:str, sub_str:str)->list:
 
 
 def list_to_string(table:list)->str:
+    """Fonction sommant une liste de chaines de caractère dans une unique chaine de caractère"""
     string = ""
     for ligne in table:
         string += ligne
@@ -568,20 +569,25 @@ def file_to_string(file_path:str)->str:
     return replace_char(list_to_string(file.readlines()), "\n", " ")
 
 
-def first_occurence_sentence(sub_str, file_path:str):
+def first_occurence_sentence(sub_str:str, file_path:str)->str:
+    """
+    :param sub_str: string - chaine de caractère
+    :param file_path: str - chemin d'accès à un fichier .txt
+    :return: str - La première phrase dans laquelle apparait la chaine sub_str dans le fichier text
+    """
     text = file_to_string(file_path) # on récupère tout le document dans une chaine de caractère
     first_occurence = occurences_index(text, sub_str)[0] # indice de la première occurrence de sub_str dans le texte
-    index = -2
-    previous_index = -2
+    index = -2 # indice de la fin de la phrase
+    previous_index = -2 # indice de la fin de phrase précédente
     i = 0
     while i < len(text) - 1 and index < first_occurence: # on parcourt le texte caractère par caractère
-        if text[i] in ".?!":
+        if text[i] in ".?!": # s'il y a un point, alors cela indique une fin de phrase
             previous_index, index = index, i
         i += 1
     if index == -2:
         return ""
     else:
-        return text[previous_index + 2:index]
+        return text[previous_index + 2:index] # +2 car on veut prendre uniquement le premier caractère de la phrase suivante
 
 
 
