@@ -149,20 +149,25 @@ def cleaning_string(string: str) -> str:
     i = 0
     while i < len(string):  # parcourir les caractères de chaque lignes
         # Si le caractère est un ', un - ou un espace, on le remplace par un espace
-        if string[i] in "-_ '" and string[i+1] != " ":
+        if string[i] in "-_ '" and len(string) > i+1 and string[i+1] != " ":
             cleaned_string += " "
+        # si le caractère est un saut de ligne, on le remplace par un espace
         if string[i] == "\n":
             cleaned_string += " "
-        if string[i] in "dntjm" and string[i-1] == " " and string[i+1] == "'":
+        # on transforme d', n', t', j', m', en de, ne, te, je, me
+        if i-1 >= 0 and string[i] in "dntjm" and string[i-1] == " " and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += string[i] + "e "
             i += 1
-        if string[i] in "DNTJM" and string[i+1] == "'":
+        # la même condition est gérée avec des majuscules
+        if string[i] in "DNTJM" and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += chr(ord(string[i])+32) + "e "
             i += 1
-        if string[i] in "lL" and string[i+1] == "'":
+        # on transforme l' en le/la
+        if string[i] in "lL" and len(string) > i+1 and string[i+1] == "'":
             cleaned_string += random.choice(["le ", "la "])
             i += 1
-        if string[i] in "qQ" and string[i+1] == "u" and string[i+2] == "'":
+        # on transforme qu' en que
+        if string[i] in "qQ" and len(string) > i+2 and string[i+1] == "u" and string[i+2] == "'":
             cleaned_string += "que "
             i += 2
         # Si le caractère est une lettre majuscule, on la convertie en minuscule
@@ -171,11 +176,12 @@ def cleaning_string(string: str) -> str:
         # Si le caractère est une lettre miniscule, on le laisse tel quel
         elif 97 <= ord(string[i]) <= 122:
             cleaned_string += string[i]
-        # remplace les accents
+        # remplace les accents et les chiffres
         elif string[i] in "éèêëçàâùôïî1234567890":
             cleaned_string += string[i]
         # tous les autres caractères ne sont pas ajoutés
         i += 1
+    # on remplace les doubles espaces par un simple
     cleaned_string = replace_char(cleaned_string, "  ", " ")
     return cleaned_string
 
@@ -200,8 +206,7 @@ def occurrence(list_of_words: list, directory: str) -> dict:
         for paragraph_word in list_of_words:  # on parcourt le string principal
             if word == paragraph_word:
                 occurrence_count += 1
-        return_dict[
-            word] = occurrence_count  # on ajoute au dictionnaire le mot en clef et son nombre d'occurrence en valeur
+        return_dict[word] = occurrence_count  # on ajoute au dictionnaire le mot en clef et son nombre d'occurrence en valeur
     return return_dict
 
 
@@ -588,6 +593,81 @@ def first_occurence_sentence(sub_str:str, file_path:str)->str:
         return ""
     else:
         return text[previous_index + 2:index] # +2 car on veut prendre uniquement le premier caractère de la phrase suivante
+
+
+def pertinent_file(corpus_tf_idf: list, sentance_tf_idf: list, file_name_list: list) -> str:
+    """
+    FONCTION pertinent_file
+    :param corpus_tf_idf: matrice tf idf contenant les mots avec leur score tf idf dans chaque doc
+    :param sentance_tf_idf: matrice contenant le score tf idf de chaque mot dans la question
+    :param file_name_list: liste contenant tous les noms des fichiers du corpus
+    :return: le nom du fichier le plus pertinent par rapport à la qiestion posée
+    """
+    most_pertinent_file = ''
+    max_cos_similarity = 0
+    # on parcourt les fichiers un a un, donc on parcourt d'abord l'indice i
+    # à chaque changement d'indice de fichier
+    for file in range(1, len(corpus_tf_idf[0])):
+        cos_similarity = 0
+        # on initialise les listes qu'on utilisera pour la fonction cosine_similarity
+        # ces deux listes doivent contenir un mot et son score tf idf pour un fichier
+        # elles sont réinitialiséées à chaque changement de fichier
+        list_tfidf_per_file = []
+        list_tfidf_of_question = []
+        for i in range(len(corpus_tf_idf)):
+            # on ajoute à ces deux listes les mots avec leur score tf idf pour un fichier spécifique
+            list_tfidf_per_file.append(corpus_tf_idf[i][file])
+            list_tfidf_of_question.append(sentance_tf_idf[i][file])
+        cos_similarity = cosine_similarity(list_tfidf_per_file, list_tfidf_of_question)
+        if cos_similarity > max_cos_similarity:
+            max_cos_similarity = cos_similarity
+            most_pertinent_file = file_name_list[file-1]
+    return most_pertinent_file
+
+
+
+def remove_useless_words_from_matrice(matrice_tfidf: list, list_of_useless_words: list) -> (list, list):
+    """
+    Fonction remove_useless_words_from_matrice
+    :param matrice_tfidf: matrice contenant le score tf idf de chaque mot dans le corpus
+    :param list_of_useless_words: liste des mots jugés inutiles d'après la fonction useless_words
+    :return: deux listes : une liste 1d comprenant tous les mots du corpus excepté les mots inutiles
+    et une matrice 2d contenant le score tf idf des mots du corpus excepté les mots inutiles
+    """
+    copy_of_matrice = []
+    all_words = []
+    for i in range(len(matrice_tfidf)):
+        if matrice_tfidf[i][0] not in list_of_useless_words:
+            copy_of_matrice.append(matrice_tfidf[i])
+            all_words.append(matrice_tfidf[i][0])
+    return (copy_of_matrice, all_words)
+
+
+def refine_answer(question_list: list, answer: str) -> str:
+    """
+    Fonction refine_answer
+    :param question_list: liste contenant les mots de la question non nettoyée
+    :param answer: la réponse trouvée par le programme sous forme de chaine de caractères
+    :return: la réponse retravaillée
+    """
+    question_starters = {
+        "Comment": "Après analyse, ",
+        "Pourquoi": "Car, ",
+        "Peux-tu": "Oui, bien sûr!"
+    }
+    answer_refined = ''
+    # conditions pour ajouter une majuscule et un point si besoin
+    if 97 <= answer[0] <= 122:
+        answer_refined = chr(ord(answer[0])-32) + answer[1:]
+    else:
+        answer_refined = answer
+    if answer[-1] != '.':
+        answer_refined += '.'
+    # on parcourt le dictionnaire pour trouver le début de phrase adéquate
+    for starter in question_starters.keys():
+        if question_list[0] == starter:
+            return question_starters[starter] + answer_refined
+    return answer_refined
 
 
 
