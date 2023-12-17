@@ -1,4 +1,3 @@
-
 from fonctions import *
 import time
 
