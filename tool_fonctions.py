@@ -95,7 +95,6 @@ def occurrence(list_of_words: list, directory: str) -> dict:
 def occurences_index(string:str, sub_str:str)->list:
     """Fonction renvoyant les indices des premiers caractères de chaque occurrence d'une chaine de caractère (sub_str)
     dans une chaine de caractères (string)"""
-    print("text", sub_str, string)
     index_list = [] # initialisation de la liste que l'on retourne
     for i in range(len(string)): # on parcourt la chaine de caractèer (string) caractère par caractère
         if string[i] == sub_str[0]: # si le premier caractère des deux chaines sont les mêmes alors on vérifie s'il y a une occurence de sub_string à cet endroit

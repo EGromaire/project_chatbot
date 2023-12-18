@@ -13,7 +13,6 @@ cleaned_directory = directory+"_cleaned"
 
 # ***** initialisation des répertoires bonus *****
 # bonus_directory = "./dataset_bonus"
-
 files_name_list = list_of_files(directory, "txt")
 
 # ***** liste des présidents *****
@@ -24,9 +23,6 @@ files_name_list = list_of_files(directory, "txt")
 
 # ***** Nettoyage des fichiers *****
 cleaning_files(files_name_list, directory)
-
-
-
 
 
 # ***** ajout de tout les mots du corpus dans une liste *****
@@ -43,8 +39,6 @@ tfidf_list = matrice_TF_IDF(cleaned_directory)
 lists_without_useless_words = remove_sublist_from_matrice(tfidf_list, useless_word_list(tfidf_list))
 tfidf_list_without_useless_words = lists_without_useless_words[0]
 all_words_list_without_useless_words = lists_without_useless_words[1]
-print("Voici la matrice TF-IDF", tfidf_list)
-#print("Voici les mots ayants les meilleurs TF-IDF :", best_tfidf(tfidf_list))
 
 
 # ***** Fonctionnalités suplémentaires *****
@@ -61,11 +55,11 @@ cleaned_question_list = question_to_list(question)
 sentence_tf = tf_list(cleaned_question_list, all_words_list_without_useless_words, len(files_name_list))
 sentence_tfidf = sentence_tf_idf(sentence_tf, all_words_list_without_useless_words, idf_score_dict)
 
-print("Voici le tf idf de la phrase", sentence_tfidf)
+#print("Voici le tf idf de la phrase", sentence_tfidf)
 file_path = directory + "/" + pertinent_file(tfidf_list_without_useless_words, sentence_tfidf, files_name_list)
 
 word_best_tfidf = name_of_max_score_in_index_2(sentence_tfidf)
-answer = first_occurence_sentence(" " + word_best_tfidf + " ", file_path)
+answer = first_occurence_sentence(word_best_tfidf, file_path)
 final_answer = refine_answer(question_list, answer)
 print('Voici donc la réponse de notre chatbot à la question "', question, '" : \n\t', final_answer)
 
@@ -74,11 +68,11 @@ in_menu = True
 # boucle tant que l'on a pas fermé le menu
 while in_menu:
     print("\n\n\t\t\t ********* Bonjour, bienvenue dans le menu *********")
-    print("\t-Si vous souhaitez fermer le menu entrez 1")
-    print("\t-Si vous souhaitez accéder aux fonctionnalités de base entrez 2")
-    print("\t-Si vous souhaitez accéder au chatbot entrez 3")
+    print("\t-Si vous souhaitez accéder aux fonctionnalités de base entrez 1")
+    print("\t-Si vous souhaitez accéder au chatbot entrez 2")
+    print("\t-Si vous souhaitez fermer le menu entrez 3")
     user_input = input("\nSaisissez le numéro de l'action que vous souhaitez exécuter : ")
-    if user_input == '1':
+    if user_input == '3':
         in_menu = False  # fin de la boucle, fin du menu
 
     # ***** fonctionnalités de base *****
@@ -111,9 +105,27 @@ while in_menu:
         else:
             print("\t\t*** ERREUR DE SAISIE ***")
             print("La valeur que vous avez saisie n'est pas valide !")
+    elif user_input == '2':
+        print("*** MENU CHATBOT ***\n")
+        question = ""
+        while len(split_char(question, " ")) <= 1:
+            question = input("\tSaisir une question (au moins 2 mots): ")+" "
+        question_list = split_char(question, " ")
+        cleaned_question_list = question_to_list(question)
 
-        if in_menu:
-            time.sleep(3)
-            print("\nRetour au menu principale.")
-            time.sleep(2.5)
+        sentence_tf = tf_list(cleaned_question_list, all_words_list_without_useless_words, len(files_name_list))
+        sentence_tfidf = sentence_tf_idf(sentence_tf, all_words_list_without_useless_words, idf_score_dict)
+        file_path = directory + "/" + pertinent_file(tfidf_list_without_useless_words, sentence_tfidf, files_name_list)
 
+        word_best_tfidf = name_of_max_score_in_index_2(sentence_tfidf)
+        answer = first_occurence_sentence(word_best_tfidf, file_path)
+        final_answer = refine_answer(question_list, answer)
+        print('Voici donc la réponse de notre chatbot à la question "', question, '" : \n\t', final_answer)
+    else:
+        print("\t\t*** ERREUR DE SAISIE ***")
+        print("La valeur que vous avez saisie n'est pas valide !")
+
+    if in_menu:
+        time.sleep(3)
+        print("\n>>> Retour au menu principale.")
+        time.sleep(2.5)
