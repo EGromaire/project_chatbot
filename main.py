@@ -65,7 +65,7 @@ print("Voici le tf idf de la phrase", sentence_tfidf)
 file_path = directory + "/" + pertinent_file(tfidf_list_without_useless_words, sentence_tfidf, files_name_list)
 
 word_best_tfidf = name_of_max_score_in_index_2(sentence_tfidf)
-answer = first_occurence_sentence(word_best_tfidf, file_path)
+answer = first_occurence_sentence(" " + word_best_tfidf + " ", file_path)
 final_answer = refine_answer(question_list, answer)
 print('Voici donc la réponse de notre chatbot à la question "', question, '" : \n\t', final_answer)
 

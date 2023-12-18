@@ -1,15 +1,6 @@
-import os
 import math
 import random
 from tool_fonctions import *
-
-
-def list_of_files(directory, extension):
-    files_names = []
-    for filename in os.listdir(directory):
-        if filename.endswith(extension):
-            files_names.append(filename)
-    return files_names
 
 
 def extract_name(file_name: str) -> str:
@@ -127,51 +118,6 @@ def cleaning_string(string: str) -> str:
 
 def question_to_list(question: str) -> list:
     return split_char(cleaning_string(question), " ")
-
-
-def occurrence(list_of_words: list, directory: str) -> dict:
-    """
-    FONCTION occurrence
-    :param directory:
-    :param list_of_words: list contenant un ensemble de mots
-    :return: dict
-    Fonctions prenant en paramètre une chaine de caractères, renvoyant un dictionnaire contenant le nombre
-    d'occurrences de chaque mot de la chaine de caractères
-    """
-    return_dict = {}  # initialisations du dictionnaire
-    set_of_words = words_of_directory(directory)[0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
-    for word in set_of_words:  # on parcourt la liste
-        occurrence_count = 0
-        for paragraph_word in list_of_words:  # on parcourt le string principal
-            if word == paragraph_word:
-                occurrence_count += 1
-        return_dict[word] = occurrence_count  # on ajoute au dictionnaire le mot en clef et son nombre d'occurrence en valeur
-    return return_dict
-
-
-def words_of_directory(directory: str) -> (list, list):
-    """
-    FONCTION list_words
-    :param directory: str
-    :return: list
-    Fonction prenant pour paramètre un chemin d'accès à un répertoire
-    renvoyant une liste contenant tout les mots contenus dans les fichiers
-    texte (.txt) de ce répertoire
-    """
-    l_files = list_of_files(directory, "txt")
-    all_words = []
-    l_words = []
-    for name in l_files:
-        list_of_words_in_file = []
-        file = open(directory + "/" + name, 'r', encoding='UTF8')
-        speech = file.readline()
-        words = split_char(speech," ")
-        for word in words:
-            if word != '':
-                list_of_words_in_file.append(word)
-                all_words.append(word)
-        l_words.append(list_of_words_in_file)
-    return tri_selection(list(set(all_words))), l_words
 
 
 def tf_score(directory: str) -> dict:
