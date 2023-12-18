@@ -1,3 +1,14 @@
+import os
+
+
+def list_of_files(directory, extension):
+    files_names = []
+    for filename in os.listdir(directory):
+        if filename.endswith(extension):
+            files_names.append(filename)
+    return files_names
+
+
 def tri_selection(liste:list):
     for i in range(len(liste)):
         # Trouver le minimum de la sous-liste
@@ -60,6 +71,27 @@ def replace_char(string: str, char: str, instead: str) -> str:
                 i_string += 1  # on incrémente de 1 afin de parcourir chaque caractère de 'string' un à un
     return new_string  # on retourne la chaine de
 
+
+def occurrence(list_of_words: list, directory: str) -> dict:
+    """
+    FONCTION occurrence
+    :param directory:
+    :param list_of_words: list contenant un ensemble de mots
+    :return: dict
+    Fonctions prenant en paramètre une chaine de caractères, renvoyant un dictionnaire contenant le nombre
+    d'occurrences de chaque mot de la chaine de caractères
+    """
+    return_dict = {}  # initialisations du dictionnaire
+    set_of_words = words_of_directory(directory)[0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
+    for word in set_of_words:  # on parcourt la liste
+        occurrence_count = 0
+        for paragraph_word in list_of_words:  # on parcourt le string principal
+            if word == paragraph_word:
+                occurrence_count += 1
+        return_dict[word] = occurrence_count  # on ajoute au dictionnaire le mot en clef et son nombre d'occurrence en valeur
+    return return_dict
+
+
 def occurences_index(string:str, sub_str:str)->list:
     """Fonction renvoyant les indices des premiers caractères de chaque occurrence d'une chaine de caractère (sub_str)
     dans une chaine de caractères (string)"""
@@ -89,6 +121,31 @@ def file_to_string(file_path:str)->str:
     """ Fonction retournant une chaine de caractère contenant le texte du fichier sans les \n de fin de ligne"""
     file = open(file_path, "r", encoding='UTF8')
     return replace_char(list_to_string(file.readlines()), "\n", " ")
+
+
+def words_of_directory(directory: str) -> (list, list):
+    """
+    FONCTION list_words
+    :param directory: str
+    :return: list
+    Fonction prenant pour paramètre un chemin d'accès à un répertoire
+    renvoyant une liste contenant tout les mots contenus dans les fichiers
+    texte (.txt) de ce répertoire
+    """
+    l_files = list_of_files(directory, "txt")
+    all_words = []
+    l_words = []
+    for name in l_files:
+        list_of_words_in_file = []
+        file = open(directory + "/" + name, 'r', encoding='UTF8')
+        speech = file.readline()
+        words = split_char(speech," ")
+        for word in words:
+            if word != '':
+                list_of_words_in_file.append(word)
+                all_words.append(word)
+        l_words.append(list_of_words_in_file)
+    return tri_selection(list(set(all_words))), l_words
 
 
 def remove_sublist_from_matrice(matrice_tfidf: list, sublist: list) -> (list, list):
