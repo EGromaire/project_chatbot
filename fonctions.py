@@ -544,7 +544,7 @@ def refine_answer(question_list: list, answer: str) -> str:
     question_starters = {
         "Comment": "Après analyse, ",
         "Pourquoi": "Car, ",
-        "Peux-tu": "Oui, bien sûr!"
+        "Peux-tu": "Oui, bien sûr ! "
     }
     answer_refined = ''
     # on parcourt le dictionnaire pour trouver le début de phrase adéquate
