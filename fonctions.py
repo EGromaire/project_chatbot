@@ -590,17 +590,18 @@ def refine_answer(question_list: list, answer: str) -> str:
         "Peux-tu": "Oui, bien sûr!"
     }
     answer_refined = ''
-    # conditions pour ajouter une majuscule et un point si besoin
-    if 97 <= answer[0] <= 122:
-        answer_refined = chr(ord(answer[0])-32) + answer[1:]
-    else:
-        answer_refined = answer
-    if answer[-1] != '.':
-        answer_refined += '.'
     # on parcourt le dictionnaire pour trouver le début de phrase adéquate
     for starter in question_starters.keys():
         if question_list[0] == starter:
-            return question_starters[starter] + answer_refined
+            answer_refined = question_starters[starter]
+    # conditions pour ajouter une majuscule et un point si besoin
+    answer_refined += answer
+    if 97 <= ord(answer_refined[0]) <= 122:
+        answer_refined = chr(ord(answer[0]) - 32) + answer[1:]
+    else:
+        answer_refined += answer
+    if answer[-1] != '.':
+        answer_refined += '.'
     return answer_refined
 
 
