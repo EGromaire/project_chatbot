@@ -1,0 +1,30 @@
+L'Union européenne (UE) et ses Etats membres font face, avec la crise du coronavirus, à leur plus grand défi depuis leur création. La maladie a déjà fait des milliers de victimes et elle affecte tous les aspects de nos vies dans des proportions qui nous échappent encore. Cette pandémie et ses conséquences économiques ne s'arrêtent pas aux frontières.
+
+Deux des plus grandes réalisations de l'Union européenne, la liberté de mouvement des biens et celle des personnes, sont remises en cause. Aucun Etat membre ne peut se battre seul face à cette crise, et cela est particulièrement vrai en matière numérique. Le retour à la normalité dans l'Union européenne, la relance de nos économies et la reprise de la libre circulation des personnes nécessitent un effort européen coordonné.
+
+Les solutions numériques nous ont permis de rester en permanence connectés en Europe malgré la distance physique. Aujourd'hui, elles peuvent aussi contribuer à la sortie de crise. Les travaux des épidémiologistes ont montré que la technologie pouvait ainsi apporter des outils nouveaux dans la lutte contre le Covid-19. Nous considérons qu'ils doivent être mobilisés.
+
+* Protection des données et de la vie privée
+
+Les applications de traçage et de notification des contacts sont notamment un élément important dans l'identification des contacts des personnes infectées. Elles peuvent permettre de limiter la progression du virus et briser les chaînes de transmission en accélérant le processus de notification : alerter au plus vite toutes les personnes contacts est un défi quotidien.
+
+Le traçage des contacts n'est, bien sûr, qu'une possibilité parmi d'autres solutions numériques. Les outils numériques ne sont eux-mêmes que des outils intégrés et complémentaires d'une stratégie médicale plus large pour combattre le virus. Mais il en va de notre responsabilité de mettre ce type d'outils à disposition de nos pays pour combattre la pandémie.
+
+Aujourd'hui, le défi auquel nous faisons face est de développer des solutions techniques qui seront efficaces, y compris par-delà les frontières entre Etats membres, tout en respectant les spécificités nationales. Toutes les solutions technologiques que nous développons le sont en accord avec nos principes communs et conformément aux législations nationales et européennes sur la protection des données et de la vie privée.
+
+Nous nous engageons notamment à développer des applications open source, respectueuses de la vie privée et fondées sur le principe du volontariat. Différentes approches techniques sont en cours de développement. Nous réaffirmons que c'est aux Etats qu'il revient de choisir les architectures technologiques qui correspondent le mieux à leur contexte national et à leur système de santé.
+
+Nos équipes nationales travaillent, dans un effort inédit, avec nos meilleurs instituts de recherche pour développer des applications nationales en un temps record. Mais nous sommes, dans le même temps, engagés dans un effort conjoint pour assurer l'interopérabilité des applications de traçage par-delà les frontières et pour continuer de travailler ensemble.
+
+Des initiatives de recherche communes sont en cours pour renforcer l'interopérabilité de ces outils au niveau européen sur le moyen terme. Les questions techniques et éthiques qui entourent le développement des applications de traçage sont un défi pour l'Europe dans sa relation avec les grands acteurs du numérique.
+
+En cette période si particulière, alors que la technologie est cruciale pour combattre une crise mondiale, nous attendons, en tant que gouvernements, des grandes entreprises technologiques qu'elles prennent en compte les besoins et l'intérêt général des pays quand elles définissent leurs standards d'usage. L'usage des technologies numériques doit être conçu de manière à ce que nous, gouvernements démocratiquement élus, puissions les évaluer au bénéfice de nos concitoyens et en accord avec les valeurs européennes.
+
+Tenter de remettre en cause ce droit en imposant des standards techniques est un faux pas et une opportunité manquée pour approfondir une collaboration ouverte entre gouvernements et secteur privé. Nous avons, au contraire, besoin que les Etats et les entreprises travaillent ensemble pour aider au redressement de nos sociétés et de nos économies et pour sortir plus forts de la pandémie, grâce à une meilleure collaboration et une transformation numérique accélérée.
+
+La souveraineté numérique constitue le fondement d'une compétitivité européenne durable. Notre ambition doit être, dans ce monde globalisé, de fixer les standards de développement et d'utilisation d'applications numériques, particulièrement quand il s'agit de technologies numériques-clés, et cela indépendamment des entreprises ou zones économiques concernées.
+
+Ensemble, nous travaillerons aux différents niveaux utiles, nationaux et internationaux, pour s'assurer, qu'en tant qu'Européens, nous construisons et renforçons notre souveraineté numérique. Il est de notre devoir commun de faire progresser un secteur numérique européen fort, moteur de notre croissance économique.
+
+L'Europe est mise à rude épreuve en cette période. Cette crise aux proportions exceptionnelles requiert des actions décisives de tous les Etats membres et des institutions et organes européens. Elle ne peut être affrontée et surmontée que collectivement. Avec des solutions coordonnées et interopérables, nous trouverons une sortie à cette crise, tout en préservant ce qui nous est cher : une Europe unie et progressiste.
+
