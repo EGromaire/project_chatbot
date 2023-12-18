@@ -82,8 +82,8 @@ def occurrence(list_of_words: list, directory: str) -> dict:
     d'occurrences de chaque mot de la chaine de caractères
     """
     return_dict = {}  # initialisations du dictionnaire
-    set_of_words = words_of_directory(directory)[0]  # set contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
-    for word in set_of_words:  # on parcourt la liste
+    all_words = words_of_directory(directory)[0]  # list contenant tous les mots présents dans les fichiers .txt, du répertoire 'directory'
+    for word in all_words:  # on parcourt la liste
         occurrence_count = 0
         for paragraph_word in list_of_words:  # on parcourt le string principal
             if word == paragraph_word:
