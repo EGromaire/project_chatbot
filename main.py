@@ -1,4 +1,5 @@
 from fonctions import *
+from tool_fonctions import *
 import time
 
 
@@ -25,14 +26,12 @@ all_words_list = words[0]
 presidents_words_list = words[1]
 
 # ***** calcule de la matrice TF-IDF *****
-idf_score = idf_score(cleaned_directory)
-tf_score = tf_score(cleaned_directory)
-tfidf_list = matrice_TF_IDF(cleaned_directory)
-
 tf_score_dict = tf_score(cleaned_directory)
 idf_score_dict = idf_score(cleaned_directory)
+tfidf_list = matrice_TF_IDF(cleaned_directory)
 
-lists_without_useless_words = remove_useless_words_from_matrice(tfidf_list, useless_word_list(tfidf_list))
+
+lists_without_useless_words = remove_sublist_from_matrice(tfidf_list, useless_word_list(tfidf_list))
 tfidf_list_without_useless_words = lists_without_useless_words[0]
 all_words_list_without_useless_words = lists_without_useless_words[1]
 print("Voici la matrice TF-IDF", tfidf_list)
@@ -46,14 +45,19 @@ print("Voici la matrice TF-IDF", tfidf_list)
 
 
 # ***************** Traitement de la phrase entré par l'utilisateur *************************
-sentence = question_to_list("école droits pacte nation")
-print(sentence)
-sentence_tf = tf_list(sentence, all_words_list_without_useless_words, len(files_name_list))
-sentence_tfidf =sentence_tf_idf(sentence_tf, all_words_list_without_useless_words, idf_score)
-print(sentence_tf)
+question = "Peux-tu me dire quelque chose sur l'école ?"
+question_list = question_to_list(question)
+
+sentence_tf = tf_list(question_list, all_words_list_without_useless_words, len(files_name_list))
+sentence_tfidf = sentence_tf_idf(sentence_tf, all_words_list_without_useless_words, idf_score_dict)
+
 print("Voici le tf idf de la phrase", sentence_tfidf)
-print(pertinent_file(tfidf_list_without_useless_words, sentence_tfidf, files_name_list))
-print(refine_answer())
+file_path = directory + "/" + pertinent_file(tfidf_list_without_useless_words, sentence_tfidf, files_name_list)
+
+word_best_tfidf = name_of_max_score_in_index_2(sentence_tfidf)
+answer = first_occurence_sentence(word_best_tfidf, file_path)
+final_answer = refine_answer(question_list, answer)
+print('Voici donc la réponse de notre chatbot à la question "', question, '" : \n\t', final_answer)
 
 # ************* MENU **************
 in_menu = True
