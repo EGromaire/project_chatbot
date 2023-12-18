@@ -555,8 +555,6 @@ def refine_answer(question_list: list, answer: str) -> str:
     answer_refined += answer
     if 97 <= ord(answer_refined[0]) <= 122:
         answer_refined = chr(ord(answer[0]) - 32) + answer[1:]
-    else:
-        answer_refined += answer
     if answer[-1] != '.':
         answer_refined += '.'
     return answer_refined
