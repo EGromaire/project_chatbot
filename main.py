@@ -46,9 +46,10 @@ print("Voici la matrice TF-IDF", tfidf_list)
 
 # ***************** Traitement de la phrase entré par l'utilisateur *************************
 question = "Peux-tu me dire quelque chose sur l'école ?"
-question_list = question_to_list(question)
+question_list = split_char(question, " ")
+cleaned_question_list = question_to_list(question)
 
-sentence_tf = tf_list(question_list, all_words_list_without_useless_words, len(files_name_list))
+sentence_tf = tf_list(cleaned_question_list, all_words_list_without_useless_words, len(files_name_list))
 sentence_tfidf = sentence_tf_idf(sentence_tf, all_words_list_without_useless_words, idf_score_dict)
 
 print("Voici le tf idf de la phrase", sentence_tfidf)
