@@ -70,19 +70,18 @@ def print_names(names: list) -> None:
     print(display)
 
 
-def cleaning_files(file_name_list: list):
-    if not os.path.exists("cleaned"):
-        os.mkdir("cleaned")
+def cleaning_files(file_name_list: list, base_directory: str):
+    if not os.path.exists(base_directory+"_cleaned"):
+        os.mkdir(base_directory+"_cleaned")
     for name in file_name_list:  # parcourir la liste des noms des fichiers, pour les ouvrir
-        file = open("speeches/" + name, "r", encoding="UTF8")
+        file = open(base_directory +"/"+ name, "r", encoding="UTF8")
         speech_list = file.readlines()
         file.close()
         speech = ''
         for line in speech_list:
             speech += line
-        file = open("cleaned/" + "cleaned_" + name, "w", encoding="UTF8")
+        file = open(base_directory+"_cleaned"+"/cleaned_" + name, "w", encoding="UTF8")
         file.write(cleaning_string(speech))
-
 
 def cleaning_string(string: str) -> str:
     cleaned_string = ''

@@ -6,18 +6,27 @@ import time
 ####################################################################################################################
 # *************************************** Call of the function ****************************************************#
 
-# *****
-directory = "./speeches"
-cleaned_directory = "./cleaned"
+# ***** initialisation des répertoires à traiter *****
+#directory = "./speeches"
+directory = "./dataset_bonus"
+cleaned_directory = directory+"_cleaned"
+
+# ***** initialisation des répertoires bonus *****
+# bonus_directory = "./dataset_bonus"
+
 files_name_list = list_of_files(directory, "txt")
-presidents_names = extracted_names_list(files_name_list)
+
+# ***** liste des présidents *****
+#presidents_names = extracted_names_list(files_name_list)
+#presidents_names = add_first_name(presidents_names)
+#print_names(presidents_names)
+
 
 # ***** Nettoyage des fichiers *****
-cleaning_files(files_name_list)
+cleaning_files(files_name_list, directory)
 
 
-presidents_names = add_first_name(presidents_names)
-print_names(presidents_names)
+
 
 
 # ***** ajout de tout les mots du corpus dans une liste *****
@@ -45,7 +54,7 @@ print("Voici la matrice TF-IDF", tfidf_list)
 
 
 # ***************** Traitement de la phrase entré par l'utilisateur *************************
-question = "Peux-tu me dire quelque chose sur l'école ?"
+question = "Le numérique et la digitalisation sont-ils un danger"
 question_list = split_char(question, " ")
 cleaned_question_list = question_to_list(question)
 
@@ -73,7 +82,7 @@ while in_menu:
         in_menu = False  # fin de la boucle, fin du menu
 
     # ***** fonctionnalités de base *****
-    elif user_input == 1:
+    elif user_input == '1':
         print("\t-Si vous souhaitez connaitre le nom du premier président à avoir parlé d'écologie, entrez 1")
         print("\t-Si vous souhaitez connaitre les mots les plus répétés par un certain président, entrez 2")
         print("\t-Si vous souhaitez connaître le nom du président à avoir le plus répété un certain mot, entrez 3")
