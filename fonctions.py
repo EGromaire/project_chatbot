@@ -74,6 +74,7 @@ def cleaning_files(file_name_list: list, base_directory: str):
         file = open(base_directory+"_cleaned"+"/cleaned_" + name, "w", encoding="UTF8")
         file.write(cleaning_string(speech))
 
+
 def cleaning_string(string: str) -> str:
     cleaned_string = ''
     i = 0
@@ -443,8 +444,8 @@ def first_occurence_sentence(sub_str:str, file_path:str)->str:
         if text[i] in ".?!": # s'il y a un point, alors cela indique une fin de phrase
             previous_index, index = index, i
         i += 1
-    if index == -2:
-        return ""
+    if sub_str not in text[previous_index + 2:index]:
+        return "Je suis désolé, je n'ai pas trouvé de réponse à votre question"
     else:
         return text[previous_index + 2:index] # +2 car on veut prendre uniquement le premier caractère de la phrase suivante
 
