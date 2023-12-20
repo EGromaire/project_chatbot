@@ -7,8 +7,8 @@ import time
 # *************************************** Call of the function ****************************************************#
 
 # ***** initialisation des répertoires à traiter *****
-#directory = "./speeches"
-directory = "./dataset_bonus"
+directory = "./speeches"
+#directory = "./dataset_bonus"
 cleaned_directory = directory+"_cleaned"
 
 # ***** initialisation des répertoires bonus *****
@@ -120,6 +120,7 @@ while in_menu:
         word_best_tfidf = name_of_max_score_in_index_2(sentence_tfidf)
         answer = first_occurence_sentence(word_best_tfidf, file_path)
         final_answer = refine_answer(question_list, answer)
+        print(word_best_tfidf)
         print('Voici donc la réponse de notre chatbot à la question "', question, '" : \n\t', final_answer)
     else:
         print("\t\t*** ERREUR DE SAISIE ***")
